@@ -1,0 +1,136 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x686A6a7DFcDa557611B175262070a816bD425277",
+    "txHash": "0xbebff7205197b8d281116adcfb3d7b0643cbdcf0ab9bea0be818445f4928519e"
+  },
+  "proxies": [
+    {
+      "address": "0x6C915a1fD6871903A02D802F4FFe0C4cdd4dc7b3",
+      "txHash": "0x0bb061e80c4c24423894da699f12154fd5d4429d3459f14571fadf4c45290f35",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "e6aca59ee6a56382c08f7a4cb2551d84e72d8de1de4bc5c07028186309c28dd7": {
+      "address": "0xbe981f9AaC7Bed3c10ba50FA2f98480485Fc8e66",
+      "txHash": "0x2e1319591db3a3b3dbed0cdd9139a2fa9e80a4fdd56736fa460c756d5678ce50",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "admin",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:20"
+          },
+          {
+            "label": "tickets",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_struct(Ticket)548_storage)",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:22"
+          },
+          {
+            "label": "ticketCopiedBy",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:23"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bool)dyn_storage": {
+            "label": "bool[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Ticket)548_storage)": {
+            "label": "mapping(address => struct TicketSystem.Ticket)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Ticket)548_storage": {
+            "label": "struct TicketSystem.Ticket",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "eventId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "walletCopies",
+                "type": "t_array(t_bool)dyn_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

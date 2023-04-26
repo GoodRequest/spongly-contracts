@@ -1,0 +1,152 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xA970De5DA459b9c80fd94c2bd145a0557972dd30",
+    "txHash": "0x0e3896bb1e3b6086942723c03cd82bd36a5c6cded2cec37f699f3334653625d7"
+  },
+  "proxies": [
+    {
+      "address": "0xf979ea3eB8A62a1A2bC915c39b8968A63Ef2E24e",
+      "txHash": "0x5646411d73d346eb750bb0718383a0775be36afd80d217620efd8396910db281",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "2ab5a3b3a1e0cfba2f26d5d301529e3dd0bfa39929264d777846c44f248e8331": {
+      "address": "0x3094fcffbf2B00EA6aD96460b64f7d8898Ad6938",
+      "txHash": "0xe814b4bfe9a75cdc928178717002a96f9ac0eb3d5646a67de227a831e7210dc4",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "admin",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:20"
+          },
+          {
+            "label": "tickets",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_struct(TicketDetail)545_storage)",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:22"
+          },
+          {
+            "label": "ticketToWallets",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:23"
+          },
+          {
+            "label": "walletToTickets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:24"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_contract(IParlayMarketsAMM)882",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:26"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_contract(IParlayMarketData)852",
+            "contract": "TicketSystem",
+            "src": "contracts/TicketSystem.sol:27"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IParlayMarketData)852": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)882": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(TicketDetail)545_storage)": {
+            "label": "mapping(address => struct TicketSystem.TicketDetail)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(TicketDetail)545_storage": {
+            "label": "struct TicketSystem.TicketDetail",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

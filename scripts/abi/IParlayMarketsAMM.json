@@ -1,0 +1,61 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_sportMarkets",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_positions",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sUSDPaid",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyQuoteFromParlay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "sUSDAfterFees",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalBuyAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalQuote",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "initialQuote",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "skewImpact",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "finalQuotes",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amountsToBuy",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
