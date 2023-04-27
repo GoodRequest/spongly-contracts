@@ -15,7 +15,11 @@ contract CopyableParlayAMM is Initializable {
         uint256 lastCopiedTime;
     }
 
+    // admin account that inicialized this contract
     address private admin;
+
+    // wallet that will recieve referral funds
+    address private constant owner = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
 
     mapping(address => CoppiedParlayDetails) public coppiedParlays; // parlayAddress -> CoppiedParlayDetails
     mapping(address => address[]) public parlayToWallets; // parlayAddress -> walletAddress[]
@@ -43,26 +47,19 @@ contract CopyableParlayAMM is Initializable {
     function buyFromParlayWithReferrer(
         address[] memory _sportMarkets,
         uint256[] memory _positions,
-        uint256 _sUSDPaid,
-        address _differentRecepient,
-        address _referrer
+        uint256 _sUSDPaid
     ) external {
-        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, _differentRecepient, _referrer);
+        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, owner);
     }
 
-    function copyFromParlayWithReferrer(
-        address _originalParlayAddress,
-        uint256 _sUSDPaid,
-        address _differentRecepient,
-        address _referrer
-    ) external {
+    function copyFromParlayWithReferrer(address _originalParlayAddress, uint256 _sUSDPaid) external {
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
         );
 
         // create new parlay on overtime
-        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, _differentRecepient, _referrer);
+        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, owner);
 
         // if parlay does not exist, add it to mappings
         if (coppiedParlays[_originalParlayAddress].owner != address(0)) {
@@ -74,7 +71,6 @@ contract CopyableParlayAMM is Initializable {
         emit ParlayCopied(_originalParlayAddress, msg.sender);
     }
 
-    // TODO: buy from parlay with diffrent collateral
     function buyFromParlayWithDifferentCollateralAndReferrer(
         address[] memory _sportMarkets,
         uint256[] memory _positions,

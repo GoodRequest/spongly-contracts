@@ -60,7 +60,7 @@ const config: HardhatUserConfig = {
 			accounts: [PRIVATE_KEY]
 		},
 		optimisticGoerli: {
-			gasPrice: 10000,
+			gasPrice: 'auto',
 			chainId: 420,
 			url: 'https://goerli.optimism.io',
 			accounts: [PRIVATE_KEY]

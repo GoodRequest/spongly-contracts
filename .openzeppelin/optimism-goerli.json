@@ -288,6 +288,142 @@
           }
         }
       }
+    },
+    "6cf2a1f874fb847b40ec3eccaffad8b0928411eaf0fafad7cfe043afa29ccc5e": {
+      "address": "0x84f2C1c2A020F0867C63f2ba86A39204B79EF3f7",
+      "txHash": "0x1525af2badbf84dc7a5da220563f452ae53d9f9487a175287480dafcdadcdea7",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "admin",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:19"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)544_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:24"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:25"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:26"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_contract(IParlayMarketsAMM)1305",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:28"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_contract(IParlayMarketData)1051",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:29"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IParlayMarketData)1051": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)1305": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)544_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)544_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
     }
   }
 }
