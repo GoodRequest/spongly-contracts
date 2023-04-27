@@ -8,12 +8,12 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
-const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY_DEV1 || ''
-const INFURA_API_KEY = process.env.INFURA_API_KEY || ''
+const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY_DEV1!
+const INFURA_API_KEY = process.env.INFURA_API_KEY!
 
-const ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY || ''
-const OP_ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY || ''
-const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || ''
+const ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY!
+const OP_ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY!
+const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY!
 
 const config: HardhatUserConfig = {
 	solidity: {

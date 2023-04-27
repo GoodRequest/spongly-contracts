@@ -2,22 +2,22 @@
 // to the Hardhat Runtime Environment.
 import { ethers, network, upgrades } from 'hardhat'
 
-const contractName = 'TicketSystem'
+const contractName = 'CopyableParlayAMM'
 
 const OP_GOERLI_PARLAY_MARKETS_AMM_ADDRESS = '0x0ec9D8Dac2178b041f85f60E3cF13CfaA3d23e0e'
 const OP_GOERLI_PARLAY_MARKET_DATA_ADDRESS = '0x1218A1DF0Fc5934d44Ea52B298e91Fe6C9Bcee1b'
 
 async function main() {
 	// Obtain reference to contract and ABI.
-	const TicketSystem = await ethers.getContractFactory(contractName)
+	const CopyableParlayAMM = await ethers.getContractFactory(contractName)
 	console.log(`Deploying ${contractName} to`, network.name)
 
 	// Get the first account from the list of 20 created for you by Hardhat
 	const [account1] = await ethers.getSigners()
 
 	//  Deploy logic contract using the proxy pattern.
-	const ticketSystem = await upgrades.deployProxy(
-		TicketSystem,
+	const copyableParlayAMM = await upgrades.deployProxy(
+		CopyableParlayAMM,
 
 		//Since the logic contract has an initialize() function
 		// we need to pass in the arguments to the initialize()
@@ -29,9 +29,9 @@ async function main() {
 		{ initializer: 'initialize' }
 	)
 
-	await ticketSystem.deployed()
+	await copyableParlayAMM.deployed()
 
-	console.log(`${contractName} deployed to:`, ticketSystem.address)
+	console.log(`${contractName} deployed to:`, copyableParlayAMM.address)
 }
 
 main()

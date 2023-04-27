@@ -1,372 +1,39 @@
-import dotenv from 'dotenv'
 import { ethers } from 'hardhat'
+import dotenv from 'dotenv'
+import path from 'path'
+import fs from 'fs'
 
 dotenv.config()
 
-const parlayMarketDataContract = {
-	addresses: {
-		5: '',
-		10: '0x3bD77B8FE52242797C29Df251418873Ae34F0641',
-		42: '',
-		420: '0x1218A1DF0Fc5934d44Ea52B298e91Fe6C9Bcee1b',
-		42161: '0xff9d1B34f369CAf91c6b69761e2A06f78ed3cd9d'
-	},
-	abi: [
-		{
-			anonymous: false,
-			inputs: [
-				{ indexed: false, internalType: 'address', name: 'oldOwner', type: 'address' },
-				{ indexed: false, internalType: 'address', name: 'newOwner', type: 'address' }
-			],
-			name: 'OwnerChanged',
-			type: 'event'
-		},
-		{
-			anonymous: false,
-			inputs: [{ indexed: false, internalType: 'address', name: 'newOwner', type: 'address' }],
-			name: 'OwnerNominated',
-			type: 'event'
-		},
-		{
-			anonymous: false,
-			inputs: [
-				{ indexed: false, internalType: 'uint256', name: 'profit', type: 'uint256' },
-				{ indexed: false, internalType: 'address[]', name: 'parlays', type: 'address[]' }
-			],
-			name: 'ParlaysExercised',
-			type: 'event'
-		},
-		{
-			anonymous: false,
-			inputs: [{ indexed: false, internalType: 'bool', name: 'isPaused', type: 'bool' }],
-			name: 'PauseChanged',
-			type: 'event'
-		},
-		{
-			anonymous: false,
-			inputs: [{ indexed: false, internalType: 'address', name: '_parlayMarketsAMM', type: 'address' }],
-			name: 'SetParlayMarketsAMM',
-			type: 'event'
-		},
-		{ inputs: [], name: 'acceptOwnership', outputs: [], stateMutability: 'nonpayable', type: 'function' },
-		{
-			inputs: [
-				{ internalType: 'address', name: '_game', type: 'address' },
-				{ internalType: 'uint256', name: '_position', type: 'uint256' },
-				{ internalType: 'address', name: '_parlayMarket', type: 'address' },
-				{ internalType: 'address', name: '_parlayOwner', type: 'address' }
-			],
-			name: 'addParlayForGamePosition',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '_parlayMarket', type: 'address' },
-				{ internalType: 'address', name: '_parlayOwner', type: 'address' }
-			],
-			name: 'addUserParlay',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address[]', name: '_parlayMarket', type: 'address[]' }],
-			name: 'exerciseParlays',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address[]', name: '_parlayMarket', type: 'address[]' },
-				{ internalType: 'address', name: '_sportMarket', type: 'address' }
-			],
-			name: 'exerciseSportMarketInParlays',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '', type: 'address' },
-				{ internalType: 'uint256', name: '', type: 'uint256' },
-				{ internalType: 'uint256', name: '', type: 'uint256' }
-			],
-			name: 'gameAddressPositionParlay',
-			outputs: [{ internalType: 'address', name: '', type: 'address' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_sportMarket', type: 'address' }],
-			name: 'getAllParlaysForGame',
-			outputs: [
-				{ internalType: 'address[]', name: 'homeParlays', type: 'address[]' },
-				{ internalType: 'address[]', name: 'awayParlays', type: 'address[]' },
-				{ internalType: 'address[]', name: 'drawParlays', type: 'address[]' }
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '_sportMarket', type: 'address' },
-				{ internalType: 'uint256', name: '_position', type: 'uint256' }
-			],
-			name: 'getAllParlaysForGamePosition',
-			outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address[]', name: '_sportMarket', type: 'address[]' }],
-			name: 'getAllParlaysForGames',
-			outputs: [
-				{ internalType: 'address[]', name: 'parlays', type: 'address[]' },
-				{ internalType: 'uint256', name: 'numOfParlays', type: 'uint256' }
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [],
-			name: 'getParlayAMMParameters',
-			outputs: [
-				{
-					components: [
-						{ internalType: 'uint256', name: 'minUSDAmount', type: 'uint256' },
-						{ internalType: 'uint256', name: 'maxSupportedAmount', type: 'uint256' },
-						{ internalType: 'uint256', name: 'maxSupportedOdds', type: 'uint256' },
-						{ internalType: 'uint256', name: 'parlayAmmFee', type: 'uint256' },
-						{ internalType: 'uint256', name: 'safeBoxImpact', type: 'uint256' },
-						{ internalType: 'uint256', name: 'parlaySize', type: 'uint256' }
-					],
-					internalType: 'struct ParlayMarketData.ParlayAmmParameters',
-					name: '',
-					type: 'tuple'
-				}
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_parlayMarket', type: 'address' }],
-			name: 'getParlayDetails',
-			outputs: [
-				{ internalType: 'uint256', name: 'numOfSportMarkets', type: 'uint256' },
-				{ internalType: 'uint256', name: 'amount', type: 'uint256' },
-				{ internalType: 'uint256', name: 'sUSDPaid', type: 'uint256' },
-				{ internalType: 'uint256', name: 'totalResultQuote', type: 'uint256' },
-				{ internalType: 'bool', name: 'resolved', type: 'bool' },
-				{ internalType: 'bool', name: 'parlayPaused', type: 'bool' },
-				{ internalType: 'bool', name: 'alreadyLost', type: 'bool' },
-				{ internalType: 'bool', name: 'fundsIssued', type: 'bool' },
-				{ internalType: 'address[]', name: 'markets', type: 'address[]' },
-				{ internalType: 'uint256[]', name: 'positions', type: 'uint256[]' },
-				{ internalType: 'uint256[]', name: 'oddsOnCreation', type: 'uint256[]' },
-				{ internalType: 'uint256[]', name: 'marketResults', type: 'uint256[]' },
-				{ internalType: 'bool[]', name: 'resolvedMarkets', type: 'bool[]' },
-				{ internalType: 'bool[]', name: 'exercisedMarkets', type: 'bool[]' }
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_parlayMarket', type: 'address' }],
-			name: 'getParlayOutcomeDetails',
-			outputs: [
-				{ internalType: 'bool', name: 'initialized', type: 'bool' },
-				{ internalType: 'bool', name: 'resolved', type: 'bool' },
-				{ internalType: 'bool', name: 'parlayPaused', type: 'bool' },
-				{ internalType: 'bool', name: 'alreadyLost', type: 'bool' },
-				{ internalType: 'bool', name: 'fundsIssued', type: 'bool' }
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_userAccount', type: 'address' }],
-			name: 'getUserParlays',
-			outputs: [{ internalType: 'address[]', name: 'userAllParlays', type: 'address[]' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '_owner', type: 'address' },
-				{ internalType: 'address', name: '_parlayMarketsAMM', type: 'address' }
-			],
-			name: 'initialize',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '_game', type: 'address' },
-				{ internalType: 'address', name: '_parlay', type: 'address' }
-			],
-			name: 'isGameInParlay',
-			outputs: [
-				{ internalType: 'bool', name: 'containsParlay', type: 'bool' },
-				{ internalType: 'uint256', name: 'position', type: 'uint256' }
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '_game', type: 'address' },
-				{ internalType: 'uint256', name: '_position', type: 'uint256' },
-				{ internalType: 'address', name: '_parlay', type: 'address' }
-			],
-			name: 'isGamePositionInParlay',
-			outputs: [{ internalType: 'bool', name: 'containsParlay', type: 'bool' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [],
-			name: 'lastPauseTime',
-			outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
-			name: 'nominateNewOwner',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [],
-			name: 'nominatedOwner',
-			outputs: [{ internalType: 'address', name: '', type: 'address' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '', type: 'address' },
-				{ internalType: 'uint256', name: '', type: 'uint256' }
-			],
-			name: 'numOfParlaysInGamePosition',
-			outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [],
-			name: 'owner',
-			outputs: [{ internalType: 'address', name: '', type: 'address' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '', type: 'address' }],
-			name: 'parlayDetails',
-			outputs: [
-				{ internalType: 'uint256', name: 'amount', type: 'uint256' },
-				{ internalType: 'uint256', name: 'sUSDPaid', type: 'uint256' }
-			],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [],
-			name: 'parlayMarketsAMM',
-			outputs: [{ internalType: 'address', name: '', type: 'address' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '', type: 'address' }],
-			name: 'parlayOwner',
-			outputs: [{ internalType: 'address', name: '', type: 'address' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [],
-			name: 'paused',
-			outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '_game', type: 'address' },
-				{ internalType: 'uint256', name: '_position', type: 'uint256' },
-				{ internalType: 'address', name: '_parlayMarket', type: 'address' }
-			],
-			name: 'removeParlayForGamePosition',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
-			name: 'setOwner',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '_parlayMarketsAMM', type: 'address' }],
-			name: 'setParlayMarketsAMM',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'bool', name: '_paused', type: 'bool' }],
-			name: 'setPaused',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: 'proxyAddress', type: 'address' }],
-			name: 'transferOwnershipAtInit',
-			outputs: [],
-			stateMutability: 'nonpayable',
-			type: 'function'
-		},
-		{
-			inputs: [{ internalType: 'address', name: '', type: 'address' }],
-			name: 'userNumOfParlays',
-			outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-			stateMutability: 'view',
-			type: 'function'
-		},
-		{
-			inputs: [
-				{ internalType: 'address', name: '', type: 'address' },
-				{ internalType: 'uint256', name: '', type: 'uint256' }
-			],
-			name: 'userParlays',
-			outputs: [{ internalType: 'address', name: '', type: 'address' }],
-			stateMutability: 'view',
-			type: 'function'
-		}
-	]
-}
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+const contractAddress = '0x3F5f42246c48cc6ac574297c84A81764a48f92ee'
+const contractABI = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'scripts', 'abi', 'CopyableParlayAMM.json')).toString())
 
 const PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY_DEV1!
-const INFURA_API_KEY = process.env.INFURA!
+const DEV_ADDRESS = process.env.WALLET_PUBLIC_KEY_DEV1!
+const INFURA_API_KEY = process.env.INFURA
 
 const infuraProvider = new ethers.providers.InfuraProvider('optimism-goerli', INFURA_API_KEY)
 const signer = new ethers.Wallet(PRIVATE_KEY, infuraProvider)
 
-const parlayDataContract = new ethers.Contract(parlayMarketDataContract.addresses[420], parlayMarketDataContract.abi, signer)
+const copyableParlayAMMContract = new ethers.Contract(contractAddress, contractABI, signer)
 
 async function main() {
-	// const parlayDetails = await parlayDataContract.getParlayDetails('0x0002288b97af304e29a608fa0e225eb1c8b5a79b')
-	const parlayDetails = await parlayDataContract.getParlayAMMParameters()
-	console.log(parlayDetails)
+	const copyableParlayAMM = await copyableParlayAMMContract.buyFromParlayWithReferrer(
+		['0x268ff41eea382bb82daf251b34ce82057fff21ce'],
+		[0],
+		7524097845257440486n,
+		ZERO_ADDRESS,
+		DEV_ADDRESS
+	)
+
+	console.log(copyableParlayAMM)
 }
 
 main()
+	.then(() => process.exit(0))
+	.catch((error) => {
+		console.error(error)
+		process.exit(1)
+	})

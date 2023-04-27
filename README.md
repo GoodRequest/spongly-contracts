@@ -10,7 +10,6 @@ npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
 
-## Links
+## Useful Links
 
--   List of addresses for diffrent networks
-    https://github.com/thales-markets/thales-sport-markets/blob/main/src/utils/contracts/parlayMarketDataContract.ts
+-   List of all overtime smart contract https://contracts.thalesmarket.io
