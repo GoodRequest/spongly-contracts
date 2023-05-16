@@ -15,11 +15,11 @@ async function main() {
 	// Get the first account from the list of 20 created for you by Hardhat
 	const [account1] = await ethers.getSigners()
 
-	//  Deploy logic contract using the proxy pattern.
+	// Deploy logic contract using the proxy pattern.
 	const copyableParlayAMM = await upgrades.deployProxy(
 		CopyableParlayAMM,
 
-		//Since the logic contract has an initialize() function
+		// Since the logic contract has an initialize() function
 		// we need to pass in the arguments to the initialize()
 		// function here.
 		[account1.address, OP_GOERLI_PARLAY_MARKETS_AMM_ADDRESS, OP_GOERLI_PARLAY_MARKET_DATA_ADDRESS],

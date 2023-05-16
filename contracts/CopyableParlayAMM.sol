@@ -2,11 +2,11 @@
 pragma solidity ^0.8.0;
 
 // external
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 // interfaces
-import "./interfaces/IParlayMarketsAMM.sol";
-import "./interfaces/IParlayMarketData.sol";
+import {IParlayMarketsAMM} from "./interfaces/IParlayMarketsAMM.sol";
+import {IParlayMarketData} from "./interfaces/IParlayMarketData.sol";
 
 contract CopyableParlayAMM is Initializable {
     struct CoppiedParlayDetails {
@@ -21,9 +21,9 @@ contract CopyableParlayAMM is Initializable {
     // wallet that will recieve referral funds
     address private constant owner = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
 
-    mapping(address => CoppiedParlayDetails) public coppiedParlays; // parlayAddress -> CoppiedParlayDetails
-    mapping(address => address[]) public parlayToWallets; // parlayAddress -> walletAddress[]
-    mapping(address => address[]) public walletToParlays; // walletAddress -> parlayAddress[]
+    mapping(address => CoppiedParlayDetails) private coppiedParlays; // parlayAddress -> CoppiedParlayDetails
+    mapping(address => address[]) private parlayToWallets; // parlayAddress -> walletAddress[]
+    mapping(address => address[]) private walletToParlays; // walletAddress -> parlayAddress[]
 
     IParlayMarketsAMM private parlayMarketsAMM;
     IParlayMarketData private parlayMarketData;

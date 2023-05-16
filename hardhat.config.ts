@@ -2,6 +2,7 @@ import { HardhatUserConfig } from 'hardhat/config'
 import '@nomiclabs/hardhat-etherscan'
 import '@nomiclabs/hardhat-ethers'
 import '@nomicfoundation/hardhat-toolbox'
+import '@nomiclabs/hardhat-solhint'
 import '@openzeppelin/hardhat-upgrades'
 import 'hardhat-abi-exporter'
 import * as dotenv from 'dotenv'
@@ -60,7 +61,7 @@ const config: HardhatUserConfig = {
 			accounts: [PRIVATE_KEY]
 		},
 		optimisticGoerli: {
-			gasPrice: 'auto',
+			gasPrice: 10000,
 			chainId: 420,
 			url: 'https://goerli.optimism.io',
 			accounts: [PRIVATE_KEY]
