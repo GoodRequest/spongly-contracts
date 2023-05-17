@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 // external
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 // interfaces
@@ -9,6 +10,8 @@ import {IParlayMarketsAMM} from "./interfaces/IParlayMarketsAMM.sol";
 import {IParlayMarketData} from "./interfaces/IParlayMarketData.sol";
 
 contract CopyableParlayAMM is Initializable {
+    using SafeERC20Upgradeable for IERC20Upgradeable;
+
     struct CoppiedParlayDetails {
         address owner;
         uint256 copiedCount;
@@ -27,15 +30,19 @@ contract CopyableParlayAMM is Initializable {
 
     IParlayMarketsAMM private parlayMarketsAMM;
     IParlayMarketData private parlayMarketData;
+    IERC20Upgradeable public sUSD;
 
     function initialize(
         address _admin,
         address _parlayMarketsAMMAddress,
-        address _parlayMarketDataAddress
+        address _parlayMarketDataAddress,
+        IERC20Upgradeable _sUSD
     ) public initializer {
         admin = _admin;
         parlayMarketsAMM = IParlayMarketsAMM(_parlayMarketsAMMAddress);
         parlayMarketData = IParlayMarketData(_parlayMarketDataAddress);
+        sUSD = _sUSD;
+        sUSD.approve(_parlayMarketsAMMAddress, type(uint256).max);
     }
 
     function getAdmin() public view returns (address) {
@@ -49,7 +56,21 @@ contract CopyableParlayAMM is Initializable {
         uint256[] memory _positions,
         uint256 _sUSDPaid
     ) external {
+        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
+
         _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, owner);
+    }
+
+    function buyFromParlayWithDifferentCollateralAndReferrer(
+        address[] memory _sportMarkets,
+        uint256[] memory _positions,
+        uint256 _sUSDPaid,
+        address _collateral,
+        address _referrer
+    ) external {
+        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
+
+        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, _referrer);
     }
 
     function copyFromParlayWithReferrer(address _originalParlayAddress, uint256 _sUSDPaid) external {
@@ -57,6 +78,8 @@ contract CopyableParlayAMM is Initializable {
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
         );
+
+        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
         // create new parlay on overtime
         _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, owner);
@@ -71,16 +94,6 @@ contract CopyableParlayAMM is Initializable {
         emit ParlayCopied(_originalParlayAddress, msg.sender);
     }
 
-    function buyFromParlayWithDifferentCollateralAndReferrer(
-        address[] memory _sportMarkets,
-        uint256[] memory _positions,
-        uint256 _sUSDPaid,
-        address _collateral,
-        address _referrer
-    ) external {
-        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, _referrer);
-    }
-
     function copyFromParlayWithDifferentCollateralAndReferrer(
         address _originalParlayAddress,
         uint256 _sUSDPaid,
@@ -91,6 +104,8 @@ contract CopyableParlayAMM is Initializable {
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
         );
+
+        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
         // create new parlay on overtime
         _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, _referrer);
@@ -193,14 +208,5 @@ contract CopyableParlayAMM is Initializable {
         return coppiedParlays[_parlayAddress].copiedCount;
     }
 
-    fallback() external payable {
-        emit Log("fallback called");
-    }
-
-    receive() external payable {
-        emit Log("receive called");
-    }
-
-    event Log(string message);
     event ParlayCopied(address indexed ticketAddress, address indexed walletAddress);
 }

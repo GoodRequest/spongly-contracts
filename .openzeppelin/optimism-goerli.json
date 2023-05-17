@@ -19,6 +19,11 @@
       "address": "0xc4543Ba47C4B7600A459c35055E2dca4b448a461",
       "txHash": "0x5a9962fad7afc258ae9a29f950ca41a6130a7571cde00c4cf3b2048b8e040e2f",
       "kind": "transparent"
+    },
+    {
+      "address": "0x54E30C68cB4B2a11c0B95131a2249C8663F56796",
+      "txHash": "0x615d9c50ae67c773c0745ab840a6a51941d21f9ef3da4a07ff976c3eba8bdfa0",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -668,6 +673,154 @@
             "numberOfBytes": "32"
           },
           "t_struct(CoppiedParlayDetails)544_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "98d12a501d524011d2605b448fe4a35f12a8aa4963b62772f9cb42c88f9debc1": {
+      "address": "0x0F3E01c8e5ba3E0943A0d23A3d0FAa1b5eB8f422",
+      "txHash": "0xeb2c49f4c08d65bd7880e8b5d190e1667d5ad3e304c69dfc391095358926958a",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "admin",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:22"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)871_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:27"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:28"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:29"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_contract(IParlayMarketsAMM)1684",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:31"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_contract(IParlayMarketData)1429",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:33"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketData)1429": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)1684": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)871_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)871_storage": {
             "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
             "members": [
               {

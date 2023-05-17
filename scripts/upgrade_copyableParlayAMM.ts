@@ -3,8 +3,8 @@ const { ethers, upgrades } = require('hardhat')
 const contractName = 'CopyableParlayAMM'
 
 async function main() {
-	// Optimism goerli copyableParlayAMM address
-	const deployedProxyAddress = '0x3F5f42246c48cc6ac574297c84A81764a48f92ee'
+	// Optimism Goerli copyableParlayAMM address
+	const deployedProxyAddress = '0x54E30C68cB4B2a11c0B95131a2249C8663F56796'
 
 	const CopyableParlayAMM = await ethers.getContractFactory(contractName)
 	console.log(`Upgrading ${contractName}...`)

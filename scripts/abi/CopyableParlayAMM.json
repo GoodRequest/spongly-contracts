@@ -16,19 +16,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "message",
-        "type": "string"
-      }
-    ],
-    "name": "Log",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "ticketAddress",
@@ -43,10 +30,6 @@
     ],
     "name": "ParlayCopied",
     "type": "event"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "fallback"
   },
   {
     "inputs": [
@@ -272,6 +255,11 @@
         "internalType": "address",
         "name": "_parlayMarketDataAddress",
         "type": "address"
+      },
+      {
+        "internalType": "contract IERC20Upgradeable",
+        "name": "_sUSD",
+        "type": "address"
       }
     ],
     "name": "initialize",
@@ -280,7 +268,16 @@
     "type": "function"
   },
   {
-    "stateMutability": "payable",
-    "type": "receive"
+    "inputs": [],
+    "name": "sUSD",
+    "outputs": [
+      {
+        "internalType": "contract IERC20Upgradeable",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]
