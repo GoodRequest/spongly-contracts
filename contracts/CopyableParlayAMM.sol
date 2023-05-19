@@ -9,7 +9,12 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {IParlayMarketsAMM} from "./interfaces/IParlayMarketsAMM.sol";
 import {IParlayMarketData} from "./interfaces/IParlayMarketData.sol";
 
-contract CopyableParlayAMM is Initializable {
+// internal
+import "./utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol";
+import "./utils/proxy/solidity-0.8.0/ProxyOwned.sol";
+import "./utils/proxy/solidity-0.8.0/ProxyPausable.sol";
+
+contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyReentrancyGuard {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     struct CoppiedParlayDetails {
@@ -22,7 +27,7 @@ contract CopyableParlayAMM is Initializable {
     address private admin;
 
     // wallet that will recieve referral funds
-    address private constant owner = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
+    address private constant reffererAddress = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
 
     mapping(address => CoppiedParlayDetails) private coppiedParlays; // parlayAddress -> CoppiedParlayDetails
     mapping(address => address[]) private parlayToWallets; // parlayAddress -> walletAddress[]
@@ -33,20 +38,17 @@ contract CopyableParlayAMM is Initializable {
     IERC20Upgradeable public sUSD;
 
     function initialize(
-        address _admin,
+        address _owner,
         address _parlayMarketsAMMAddress,
         address _parlayMarketDataAddress,
         IERC20Upgradeable _sUSD
     ) public initializer {
-        admin = _admin;
+        setOwner(_owner);
+        initNonReentrant();
         parlayMarketsAMM = IParlayMarketsAMM(_parlayMarketsAMMAddress);
         parlayMarketData = IParlayMarketData(_parlayMarketDataAddress);
         sUSD = _sUSD;
         sUSD.approve(_parlayMarketsAMMAddress, type(uint256).max);
-    }
-
-    function getAdmin() public view returns (address) {
-        return admin;
     }
 
     /* ========== EXTERNAL FUNCTIONS ========== */
@@ -55,25 +57,24 @@ contract CopyableParlayAMM is Initializable {
         address[] memory _sportMarkets,
         uint256[] memory _positions,
         uint256 _sUSDPaid
-    ) external {
+    ) external nonReentrant notPaused {
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
-        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, owner);
+        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, reffererAddress);
     }
 
     function buyFromParlayWithDifferentCollateralAndReferrer(
         address[] memory _sportMarkets,
         uint256[] memory _positions,
         uint256 _sUSDPaid,
-        address _collateral,
-        address _referrer
-    ) external {
+        address _collateral
+    ) external nonReentrant notPaused {
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
-        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, _referrer);
+        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, reffererAddress);
     }
 
-    function copyFromParlayWithReferrer(address _originalParlayAddress, uint256 _sUSDPaid) external {
+    function copyFromParlayWithReferrer(address _originalParlayAddress, uint256 _sUSDPaid) external nonReentrant notPaused {
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
@@ -82,24 +83,17 @@ contract CopyableParlayAMM is Initializable {
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
         // create new parlay on overtime
-        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, owner);
+        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, reffererAddress);
 
-        // if parlay does not exist, add it to mappings
-        if (coppiedParlays[_originalParlayAddress].owner != address(0)) {
-            _storeNewParlay(_originalParlayAddress);
-        } else {
-            _storeExistingParlay(_originalParlayAddress);
-        }
-
-        emit ParlayCopied(_originalParlayAddress, msg.sender);
+        // store new coppied parlay
+        _handleParlayStore(_originalParlayAddress);
     }
 
     function copyFromParlayWithDifferentCollateralAndReferrer(
         address _originalParlayAddress,
         uint256 _sUSDPaid,
-        address _collateral,
-        address _referrer
-    ) external {
+        address _collateral
+    ) external nonReentrant notPaused {
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
@@ -108,16 +102,10 @@ contract CopyableParlayAMM is Initializable {
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
         // create new parlay on overtime
-        _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, _referrer);
+        _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, reffererAddress);
 
-        // if parlay does not exist, add it to mappings
-        if (coppiedParlays[_originalParlayAddress].owner != address(0)) {
-            _storeNewParlay(_originalParlayAddress);
-        } else {
-            _storeExistingParlay(_originalParlayAddress);
-        }
-
-        emit ParlayCopied(_originalParlayAddress, msg.sender);
+        // store new coppied parlay
+        _handleParlayStore(_originalParlayAddress);
     }
 
     /* ========== INTERNAL FUNCTIONS ========== */
@@ -167,6 +155,17 @@ contract CopyableParlayAMM is Initializable {
             _collateral,
             _referrer
         );
+    }
+
+    function _handleParlayStore(address _parlayAddress) internal {
+        // if parlay does not exist, add it to mappings
+        if (coppiedParlays[_parlayAddress].owner != address(0)) {
+            _storeNewParlay(_parlayAddress);
+        } else {
+            _storeExistingParlay(_parlayAddress);
+        }
+
+        emit ParlayCopied(_parlayAddress, msg.sender);
     }
 
     function _storeNewParlay(address _parlayAddress) internal {
