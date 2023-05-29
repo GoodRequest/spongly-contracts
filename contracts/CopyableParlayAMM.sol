@@ -8,6 +8,7 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 // interfaces
 import {IParlayMarketsAMM} from "./interfaces/IParlayMarketsAMM.sol";
 import {IParlayMarketData} from "./interfaces/IParlayMarketData.sol";
+import {ICurveSUSD} from "./interfaces/ICurveSUSD.sol";
 
 // internal
 import "./utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol";
@@ -17,17 +18,15 @@ import "./utils/proxy/solidity-0.8.0/ProxyPausable.sol";
 contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyReentrancyGuard {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
+    uint private constant ONE = 1e18;
+    uint private constant ONE_PERCENT = 1e16;
+    uint private constant MAX_APPROVAL = type(uint256).max;
+
     struct CoppiedParlayDetails {
         address owner;
         uint256 copiedCount;
         uint256 lastCopiedTime;
     }
-
-    // admin account that inicialized this contract
-    address private admin;
-
-    // wallet that will recieve referral funds
-    address private constant reffererAddress = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
 
     mapping(address => CoppiedParlayDetails) private coppiedParlays; // parlayAddress -> CoppiedParlayDetails
     mapping(address => address[]) private parlayToWallets; // parlayAddress -> walletAddress[]
@@ -36,6 +35,15 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
     IParlayMarketsAMM private parlayMarketsAMM;
     IParlayMarketData private parlayMarketData;
     IERC20Upgradeable public sUSD;
+    ICurveSUSD public curveSUSD;
+
+    address private refferer;
+    address public usdc;
+    address public usdt;
+    address public dai;
+
+    bool public curveOnrampEnabled;
+    uint public maxAllowedPegSlippagePercentage;
 
     function initialize(
         address _owner,
@@ -48,61 +56,108 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         parlayMarketsAMM = IParlayMarketsAMM(_parlayMarketsAMMAddress);
         parlayMarketData = IParlayMarketData(_parlayMarketDataAddress);
         sUSD = _sUSD;
-        sUSD.approve(_parlayMarketsAMMAddress, type(uint256).max);
+        sUSD.approve(address(parlayMarketsAMM), MAX_APPROVAL);
+        refferer = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
+        maxAllowedPegSlippagePercentage = 2e16; // 0.02 ETH
     }
 
     /* ========== EXTERNAL FUNCTIONS ========== */
 
-    function buyFromParlayWithReferrer(
+    function buyFromParlay(
         address[] memory _sportMarkets,
         uint256[] memory _positions,
         uint256 _sUSDPaid
     ) external nonReentrant notPaused {
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
-        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, reffererAddress);
+        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, refferer);
     }
 
-    function buyFromParlayWithDifferentCollateralAndReferrer(
-        address[] memory _sportMarkets,
-        uint256[] memory _positions,
-        uint256 _sUSDPaid,
-        address _collateral
-    ) external nonReentrant notPaused {
-        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
-
-        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, reffererAddress);
-    }
-
-    function copyFromParlayWithReferrer(address _originalParlayAddress, uint256 _sUSDPaid) external nonReentrant notPaused {
+    function copyFromParlay(address _originalParlayAddress, uint256 _sUSDPaid) external nonReentrant notPaused {
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
         );
 
+        // transfer sUSD from msg.sender
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
         // create new parlay on overtime
-        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, reffererAddress);
+        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, refferer);
 
         // store new coppied parlay
         _handleParlayStore(_originalParlayAddress);
     }
 
-    function copyFromParlayWithDifferentCollateralAndReferrer(
+    function buyFromParlayWithDifferentCollateral(
+        address[] memory _sportMarkets,
+        uint256[] memory _positions,
+        uint256 _sUSDPaid,
+        address _collateral
+    ) external nonReentrant notPaused {
+        uint additionalSlippage = 1e16; // 1-2% => (0.01*1e18)
+
+        int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
+        require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
+
+        // cant get a quote on how much collateral is needed from curve for sUSD,
+        // so rather get how much of collateral you get for the sUSD quote and add 0.2% to that
+        uint collateralQuote = (curveSUSD.get_dy_underlying(0, curveIndex, _sUSDPaid) * (ONE + (ONE_PERCENT / (5)))) / ONE;
+
+        uint transformedCollateralForPegCheck = _collateral == usdc || _collateral == usdt
+            ? collateralQuote * 1e12
+            : collateralQuote;
+        require(
+            maxAllowedPegSlippagePercentage > 0 &&
+                transformedCollateralForPegCheck >= (_sUSDPaid * (ONE - maxAllowedPegSlippagePercentage)) / ONE,
+            "Amount below max allowed peg slippage"
+        );
+
+        require((collateralQuote * ONE) / (_sUSDPaid) <= (ONE + additionalSlippage), "Slippage too high!");
+
+        IERC20Upgradeable collateralToken = IERC20Upgradeable(_collateral);
+        collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
+        curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
+
+        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, refferer);
+    }
+
+    function copyFromParlayWithDifferentCollateral(
         address _originalParlayAddress,
         uint256 _sUSDPaid,
         address _collateral
     ) external nonReentrant notPaused {
+        uint additionalSlippage = 1e16; // 1-2% => (0.01*1e18)
+
+        int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
+        require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
+
+        // cant get a quote on how much collateral is needed from curve for sUSD,
+        // so rather get how much of collateral you get for the sUSD quote and add 0.2% to that
+        uint collateralQuote = (curveSUSD.get_dy_underlying(0, curveIndex, _sUSDPaid) * (ONE + (ONE_PERCENT / (5)))) / ONE;
+
+        uint transformedCollateralForPegCheck = _collateral == usdc || _collateral == usdt
+            ? collateralQuote * 1e12
+            : collateralQuote;
+        require(
+            maxAllowedPegSlippagePercentage > 0 &&
+                transformedCollateralForPegCheck >= (_sUSDPaid * (ONE - maxAllowedPegSlippagePercentage)) / ONE,
+            "Amount below max allowed peg slippage"
+        );
+
+        require((collateralQuote * ONE) / (_sUSDPaid) <= (ONE + additionalSlippage), "Slippage too high!");
+
+        IERC20Upgradeable collateralToken = IERC20Upgradeable(_collateral);
+        collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
+        curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
+
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
             _originalParlayAddress
         );
 
-        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
-
         // create new parlay on overtime
-        _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, reffererAddress);
+        _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, refferer);
 
         // store new coppied parlay
         _handleParlayStore(_originalParlayAddress);
@@ -145,6 +200,17 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
             _sUSDPaid,
             _collateral
         );
+
+        int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
+        require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
+
+        //cant get a quote on how much collateral is needed from curve for sUSD,
+        //so rather get how much of collateral you get for the sUSD quote and add 0.2% to that
+        uint collateralQuote = (curveSUSD.get_dy_underlying(0, curveIndex, _sUSDPaid) * (ONE + (ONE_PERCENT / (5)))) / ONE;
+
+        IERC20Upgradeable collateralToken = IERC20Upgradeable(_collateral);
+        collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
+        curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
 
         parlayMarketsAMM.buyFromParlayWithDifferentCollateralAndReferrer(
             _sportMarkets,
@@ -189,6 +255,19 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         emit ParlayCopied(_parlayAddress, msg.sender);
     }
 
+    function _mapCollateralToCurveIndex(address collateral) internal view returns (int128) {
+        if (collateral == dai) {
+            return 1;
+        }
+        if (collateral == usdc) {
+            return 2;
+        }
+        if (collateral == usdt) {
+            return 3;
+        }
+        return 0;
+    }
+
     /* ========== VIEW FUNCTIONS ========== */
 
     function getCoppiedParlayDetails(address _parlayAddress) public view returns (CoppiedParlayDetails memory) {
@@ -207,5 +286,52 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         return coppiedParlays[_parlayAddress].copiedCount;
     }
 
+    /* ========== SETTERS FUNCTIONS ========== */
+
+    function setAddresses(address _parlayMarketsAMM, address _parlayMarketData) external onlyOwner {
+        parlayMarketsAMM = IParlayMarketsAMM(_parlayMarketsAMM);
+        parlayMarketData = IParlayMarketData(_parlayMarketData);
+        sUSD.approve(address(parlayMarketsAMM), MAX_APPROVAL);
+        emit AddressesSet(_parlayMarketsAMM, _parlayMarketData);
+    }
+
+    /// @notice Setting the Curve collateral addresses for all collaterals
+    /// @param _curveSUSD Address of the Curve contract
+    /// @param _dai Address of the DAI contract
+    /// @param _usdc Address of the USDC contract
+    /// @param _usdt Address of the USDT (Tether) contract
+    /// @param _maxAllowedPegSlippagePercentage maximum discount AMM accepts for sUSD purchases
+    function setCurveSUSD(
+        address _curveSUSD,
+        address _dai,
+        address _usdc,
+        address _usdt,
+        bool _curveOnrampEnabled,
+        uint _maxAllowedPegSlippagePercentage
+    ) external onlyOwner {
+        curveSUSD = ICurveSUSD(_curveSUSD);
+        dai = _dai;
+        usdc = _usdc;
+        usdt = _usdt;
+        IERC20Upgradeable(dai).approve(_curveSUSD, MAX_APPROVAL);
+        IERC20Upgradeable(usdc).approve(_curveSUSD, MAX_APPROVAL);
+        IERC20Upgradeable(usdt).approve(_curveSUSD, MAX_APPROVAL);
+        // not needed unless selling into different collateral is enabled
+        // sUSD.approve(_curveSUSD, MAX_APPROVAL);
+        curveOnrampEnabled = _curveOnrampEnabled;
+        maxAllowedPegSlippagePercentage = _maxAllowedPegSlippagePercentage;
+        emit CurveParametersUpdated(_curveSUSD, _dai, _usdc, _usdt, _curveOnrampEnabled);
+    }
+
+    /// @notice Setting the refferer address
+    /// @param _refferer Address of the refferer
+    function setRefferer(address _refferer) external onlyOwner {
+        refferer = _refferer;
+        emit ReffererUpdated(_refferer);
+    }
+
+    event AddressesSet(address _parlayMarketsAMM, address _parlayMarketData);
     event ParlayCopied(address indexed ticketAddress, address indexed walletAddress);
+    event CurveParametersUpdated(address curveSUSD, address dai, address usdc, address usdt, bool curveOnrampEnabled);
+    event ReffererUpdated(address reffererAddress);
 }

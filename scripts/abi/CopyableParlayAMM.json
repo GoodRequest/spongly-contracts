@@ -4,6 +4,62 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "_parlayMarketsAMM",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_parlayMarketData",
+        "type": "address"
+      }
+    ],
+    "name": "AddressesSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "curveSUSD",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "dai",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "usdc",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "usdt",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "curveOnrampEnabled",
+        "type": "bool"
+      }
+    ],
+    "name": "CurveParametersUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint8",
         "name": "version",
         "type": "uint8"
@@ -77,6 +133,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "reffererAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ReffererUpdated",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "acceptOwnership",
     "outputs": [],
@@ -99,14 +168,9 @@
         "internalType": "uint256",
         "name": "_sUSDPaid",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_collateral",
-        "type": "address"
       }
     ],
-    "name": "buyFromParlayWithDifferentCollateralAndReferrer",
+    "name": "buyFromParlay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -127,9 +191,32 @@
         "internalType": "uint256",
         "name": "_sUSDPaid",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateral",
+        "type": "address"
       }
     ],
-    "name": "buyFromParlayWithReferrer",
+    "name": "buyFromParlayWithDifferentCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_originalParlayAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sUSDPaid",
+        "type": "uint256"
+      }
+    ],
+    "name": "copyFromParlay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -152,27 +239,48 @@
         "type": "address"
       }
     ],
-    "name": "copyFromParlayWithDifferentCollateralAndReferrer",
+    "name": "copyFromParlayWithDifferentCollateral",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "curveOnrampEnabled",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_originalParlayAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_sUSDPaid",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
-    "name": "copyFromParlayWithReferrer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "curveSUSD",
+    "outputs": [
+      {
+        "internalType": "contract ICurveSUSD",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "dai",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -317,6 +425,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "maxAllowedPegSlippagePercentage",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -385,6 +506,62 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_parlayMarketsAMM",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_parlayMarketData",
+        "type": "address"
+      }
+    ],
+    "name": "setAddresses",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_curveSUSD",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_dai",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_usdc",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_usdt",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_curveOnrampEnabled",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxAllowedPegSlippagePercentage",
+        "type": "uint256"
+      }
+    ],
+    "name": "setCurveSUSD",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       }
@@ -411,6 +588,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_reffererAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setRefferer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "proxyAddress",
         "type": "address"
       }
@@ -418,6 +608,32 @@
     "name": "transferOwnershipAtInit",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "usdc",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "usdt",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]
