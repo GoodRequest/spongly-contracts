@@ -22,13 +22,13 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
     uint private constant ONE_PERCENT = 1e16;
     uint private constant MAX_APPROVAL = type(uint256).max;
 
-    struct CoppiedParlayDetails {
+    struct CopiedParlayDetails {
         address owner;
         uint256 copiedCount;
         uint256 lastCopiedTime;
     }
 
-    mapping(address => CoppiedParlayDetails) private coppiedParlays; // parlayAddress -> CoppiedParlayDetails
+    mapping(address => CopiedParlayDetails) private copiedParlays; // parlayAddress -> CopiedParlayDetails
     mapping(address => address[]) private parlayToWallets; // parlayAddress -> walletAddress[]
     mapping(address => address[]) private walletToParlays; // walletAddress -> parlayAddress[]
 
@@ -49,16 +49,18 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         address _owner,
         address _parlayMarketsAMMAddress,
         address _parlayMarketDataAddress,
-        IERC20Upgradeable _sUSD
+        IERC20Upgradeable _sUSD,
+        address _referrer,
+        uint _maxAllowedPegSlippagePercentage
     ) public initializer {
         setOwner(_owner);
         initNonReentrant();
         parlayMarketsAMM = IParlayMarketsAMM(_parlayMarketsAMMAddress);
         parlayMarketData = IParlayMarketData(_parlayMarketDataAddress);
         sUSD = _sUSD;
+        refferer = _referrer;
+        maxAllowedPegSlippagePercentage = _maxAllowedPegSlippagePercentage;
         sUSD.approve(address(parlayMarketsAMM), MAX_APPROVAL);
-        refferer = 0xF21e489f84566Bd82DFF2783C80b5fC1A9dca608;
-        maxAllowedPegSlippagePercentage = 2e16; // 0.02 ETH
     }
 
     /* ========== EXTERNAL FUNCTIONS ========== */
@@ -73,20 +75,20 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, refferer);
     }
 
-    function copyFromParlay(address _originalParlayAddress, uint256 _sUSDPaid) external nonReentrant notPaused {
+    function copyFromParlay(address _parlayAddress, uint256 _sUSDPaid) external nonReentrant notPaused {
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
-            _originalParlayAddress
+            _parlayAddress
         );
 
-        // transfer sUSD from msg.sender
+        // // transfer sUSD from msg.sender
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
-        // create new parlay on overtime
+        // // create new parlay on overtime
         _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, refferer);
 
-        // store new coppied parlay
-        _handleParlayStore(_originalParlayAddress);
+        // // store new copied parlay
+        _handleParlayStore(_parlayAddress);
     }
 
     function buyFromParlayWithDifferentCollateral(
@@ -123,7 +125,7 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
     }
 
     function copyFromParlayWithDifferentCollateral(
-        address _originalParlayAddress,
+        address _parlayAddress,
         uint256 _sUSDPaid,
         address _collateral
     ) external nonReentrant notPaused {
@@ -153,14 +155,18 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 
         // get values from original parlay
         (, , , , , , , , address[] memory markets, uint[] memory positions, , , , ) = parlayMarketData.getParlayDetails(
-            _originalParlayAddress
+            _parlayAddress
         );
 
         // create new parlay on overtime
         _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, refferer);
 
-        // store new coppied parlay
-        _handleParlayStore(_originalParlayAddress);
+        // store new copied parlay
+        _handleParlayStore(_parlayAddress);
+    }
+
+    function retrieveSUSDAmount(address payable account, uint amount) external onlyOwner {
+        sUSD.safeTransfer(account, amount);
     }
 
     /* ========== INTERNAL FUNCTIONS ========== */
@@ -201,17 +207,6 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
             _collateral
         );
 
-        int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
-        require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
-
-        //cant get a quote on how much collateral is needed from curve for sUSD,
-        //so rather get how much of collateral you get for the sUSD quote and add 0.2% to that
-        uint collateralQuote = (curveSUSD.get_dy_underlying(0, curveIndex, _sUSDPaid) * (ONE + (ONE_PERCENT / (5)))) / ONE;
-
-        IERC20Upgradeable collateralToken = IERC20Upgradeable(_collateral);
-        collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
-        curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
-
         parlayMarketsAMM.buyFromParlayWithDifferentCollateralAndReferrer(
             _sportMarkets,
             _positions,
@@ -224,33 +219,20 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
     }
 
     function _handleParlayStore(address _parlayAddress) internal {
-        // if parlay does not exist, add it to mappings
-        if (coppiedParlays[_parlayAddress].owner != address(0)) {
-            _storeNewParlay(_parlayAddress);
+        CopiedParlayDetails storage parlay = copiedParlays[_parlayAddress];
+
+        if (parlay.owner == address(0)) {
+            // Create new the copiedParlayDetails
+            copiedParlays[_parlayAddress] = CopiedParlayDetails(msg.sender, 1, block.timestamp);
         } else {
-            _storeExistingParlay(_parlayAddress);
+            // Update the copiedParlayDetails
+            parlay.copiedCount++;
+            parlay.lastCopiedTime = block.timestamp;
+
+            // Update the wallet-to-parlays and parlay-to-wallets mappings
+            parlayToWallets[_parlayAddress].push(msg.sender);
+            walletToParlays[msg.sender].push(_parlayAddress);
         }
-
-        emit ParlayCopied(_parlayAddress, msg.sender);
-    }
-
-    function _storeNewParlay(address _parlayAddress) internal {
-        require(coppiedParlays[_parlayAddress].owner == address(0), "Ticket already exists");
-
-        coppiedParlays[_parlayAddress] = CoppiedParlayDetails(msg.sender, 0, 0);
-    }
-
-    function _storeExistingParlay(address _parlayAddress) internal {
-        CoppiedParlayDetails memory coppiedParlay = coppiedParlays[_parlayAddress];
-        require(coppiedParlay.owner != address(0), "Parlay does not exist");
-
-        // update the coppiedParlayDetail's fields
-        coppiedParlay.copiedCount++;
-        coppiedParlay.lastCopiedTime = block.timestamp;
-
-        // update the coppiedParlayDetail's mappings
-        parlayToWallets[_parlayAddress].push(msg.sender);
-        walletToParlays[msg.sender].push(_parlayAddress);
 
         emit ParlayCopied(_parlayAddress, msg.sender);
     }
@@ -270,8 +252,8 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 
     /* ========== VIEW FUNCTIONS ========== */
 
-    function getCoppiedParlayDetails(address _parlayAddress) public view returns (CoppiedParlayDetails memory) {
-        return coppiedParlays[_parlayAddress];
+    function getCopiedParlayDetails(address _parlayAddress) public view returns (CopiedParlayDetails memory) {
+        return copiedParlays[_parlayAddress];
     }
 
     function getParlayWallets(address _parlayAddress) public view returns (address[] memory) {
@@ -283,7 +265,7 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
     }
 
     function getParlayCopiedCount(address _parlayAddress) public view returns (uint256) {
-        return coppiedParlays[_parlayAddress].copiedCount;
+        return copiedParlays[_parlayAddress].copiedCount;
     }
 
     /* ========== SETTERS FUNCTIONS ========== */

@@ -1636,6 +1636,1326 @@
           }
         }
       }
+    },
+    "5648c8b3d917a0116a76e278c277614e810fd0effcb3f8f890e2110d48e4e18b": {
+      "address": "0xa796C5386c461CdA9474e1bDDbA844C77b285b99",
+      "txHash": "0xff216faf4cb0d1918ff2c1ac137e9a1e136ea485754dce43592b7476738b52c3",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:31"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:33"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(IParlayMarketsAMM)2120",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:35"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IParlayMarketData)1865",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:36"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:37"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_contract(ICurveSUSD)1823",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:38"
+          },
+          {
+            "label": "refferer",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:40"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:41"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:42"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:43"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:45"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_uint256",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:46"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)1823": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketData)1865": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)2120": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)895_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "50787db65ef649ad2f153def38e069caa56eca8e83610959003aee43e10c7197": {
+      "address": "0xCB7E62426f2e839168320aAcCCB997b1b262EDe5",
+      "txHash": "0x18a6d281be10dbcc4ba90878a195dbb749e82e33b6b6ac5d5195a0d9fae6721a",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:31"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:33"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(IParlayMarketsAMM)2131",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:35"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IParlayMarketData)1876",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:36"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:37"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_contract(ICurveSUSD)1834",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:38"
+          },
+          {
+            "label": "refferer",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:40"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:41"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:42"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:43"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:45"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_uint256",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:46"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)1834": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketData)1876": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)2131": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)895_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "c9dc3b74c970670bcd084a2a50c4bd5c44fb4715a38d8fbe2ed9ea081fe778b8": {
+      "address": "0x3a69856C428f80Ca5d5798E8b003477148215687",
+      "txHash": "0x7252e4d0cd9fd22665662f23b20707d08650b3a71a61b41fd96bbc8836b853ba",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:31"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:33"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(IParlayMarketsAMM)2096",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:35"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IParlayMarketData)1841",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:36"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:37"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_contract(ICurveSUSD)1799",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:38"
+          },
+          {
+            "label": "refferer",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:40"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:41"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:42"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:43"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:45"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_uint256",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:46"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)1799": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketData)1841": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)2096": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)895_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "bd6b0704a54e396e2bd437f34ea1870e5cb9db719f19931161d19e9a7538582a": {
+      "address": "0xc6212c588D32cc3C3fB1FBb9e862EB64CcAEFa2D",
+      "txHash": "0x62ce6ea1289d3c80eecdd29af0dc1e6eca67b9dd8d6ce22fea47db21e8c7167f",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:31"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:33"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(IParlayMarketsAMM)2112",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:35"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IParlayMarketData)1857",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:36"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:37"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_contract(ICurveSUSD)1815",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:38"
+          },
+          {
+            "label": "refferer",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:40"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:41"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:42"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:43"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:45"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_uint256",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:46"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)1815": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketData)1857": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)2112": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)895_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "65372bdd8068c60ed28f367014c39747f47275b03a9ade9a3a1fbd9ec6b3220d": {
+      "address": "0x8EB41B206e4d6C4E5C156e27117854d1c03Ff90B",
+      "txHash": "0xbbb6fdd40cde1cd5dcf05e5eb1ce2a41233b86d9fed8bb90d36b4b23ef68b4a9",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "coppiedParlays",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:33"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:34"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(IParlayMarketsAMM)2110",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:36"
+          },
+          {
+            "label": "parlayMarketData",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IParlayMarketData)1855",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:37"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:38"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_contract(ICurveSUSD)1813",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:39"
+          },
+          {
+            "label": "refferer",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:41"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:42"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:43"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:44"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "16",
+            "type": "t_bool",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:46"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_uint256",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableParlayAMM.sol:47"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)1813": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketData)1855": {
+            "label": "contract IParlayMarketData",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)2110": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CoppiedParlayDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CoppiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CoppiedParlayDetails)895_storage": {
+            "label": "struct CopyableParlayAMM.CoppiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
     }
   }
 }

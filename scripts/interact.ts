@@ -5,8 +5,6 @@ import fs from 'fs'
 
 dotenv.config()
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-
 const contractAddress = '0x6C915a1fD6871903A02D802F4FFe0C4cdd4dc7b3'
 const contractABI = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'scripts', 'abi', 'CopyableParlayAMM.json')).toString())
 

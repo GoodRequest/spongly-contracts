@@ -1,10 +1,12 @@
-const { ethers, upgrades } = require('hardhat')
+import { setDeploymentAddress } from '../utils/helpers'
+
+const { ethers, upgrades, network } = require('hardhat')
 
 const contractName = 'CopyableParlayAMM'
 
 async function main() {
 	// Optimism Goerli copyableParlayAMM address
-	const deployedProxyAddress = '0x54E30C68cB4B2a11c0B95131a2249C8663F56796'
+	const deployedProxyAddress = '0x407085F8a5C4B9ED06d4b18e7A14d266b3C64EaB'
 
 	const CopyableParlayAMM = await ethers.getContractFactory(contractName)
 	console.log(`Upgrading ${contractName}...`)
