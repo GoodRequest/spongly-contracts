@@ -81,13 +81,13 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
             _parlayAddress
         );
 
-        // // transfer sUSD from msg.sender
+        // transfer sUSD from msg.sender
         sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
-        // // create new parlay on overtime
+        // create new parlay on overtime
         _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, refferer);
 
-        // // store new copied parlay
+        // store new copied parlay
         _handleParlayStore(_parlayAddress);
     }
 
@@ -121,7 +121,7 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
         curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
 
-        _buyFromParlayWithDifferentCollateralAndReferrer(_sportMarkets, _positions, _sUSDPaid, _collateral, refferer);
+        _buyFromParlayWithReferrer(_sportMarkets, _positions, _sUSDPaid, msg.sender, refferer);
     }
 
     function copyFromParlayWithDifferentCollateral(
@@ -159,7 +159,7 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         );
 
         // create new parlay on overtime
-        _buyFromParlayWithDifferentCollateralAndReferrer(markets, positions, _sUSDPaid, _collateral, refferer);
+        _buyFromParlayWithReferrer(markets, positions, _sUSDPaid, msg.sender, refferer);
 
         // store new copied parlay
         _handleParlayStore(_parlayAddress);
