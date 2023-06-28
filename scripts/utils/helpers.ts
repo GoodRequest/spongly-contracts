@@ -1,23 +1,34 @@
-import { readFile, writeFile } from 'fs/promises'
+import { readFileSync, writeFileSync, existsSync } from 'fs'
 import path from 'path'
 
 export const DEPLOYMENTS_PATH = path.resolve(process.cwd(), 'scripts', 'utils', 'deployments.json')
 
-const parseDeployments = async () => {
-	const deployments = await readFile(DEPLOYMENTS_PATH, 'utf-8')
-	return JSON.parse(deployments)
+const parseDeployments = () => {
+	if (existsSync(DEPLOYMENTS_PATH)) {
+		const deployments = readFileSync(DEPLOYMENTS_PATH, { encoding: 'utf-8' })
+
+		return JSON.parse(deployments)
+	}
 }
 
-export const setDeploymentAddress = async (contractName: string, contractAddress: string, network: string): Promise<void> => {
-	const deployments = await parseDeployments()
+export const setDeploymentAddress = (contractName: string, contractAddress: string, network: string): void => {
+	const deployments = parseDeployments()
+
+	if (!(network in deployments)) {
+		deployments[network] = {}
+	}
 
 	deployments[network][contractName] = contractAddress
 
-	writeFile(DEPLOYMENTS_PATH, JSON.stringify(deployments, null, 2))
+	writeFileSync(DEPLOYMENTS_PATH, JSON.stringify(deployments, null, 4))
 }
 
-export const getDeploymentAddress = async (contractName: string, network: string): Promise<string> => {
-	const deployments = await parseDeployments()
+export const getDeploymentAddress = (contractName: string, network: string): string => {
+	const deployments = parseDeployments()
+
+	if (!(network in deployments)) {
+		throw new Error('Network not found')
+	}
 
 	return deployments[network][contractName]
 }

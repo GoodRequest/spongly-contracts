@@ -1,18 +1,11 @@
 # Spongly-contract
 
-Hardhat example scripts
+🪸 Smart contracts for spongly dApp
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+## Contracts
 
-## Deployed Contracts
+- All addresses of deployed contracts can be found in `scripts/utils/deployments.json`
 
-- Optimism Goerli: 0x54E30C68cB4B2a11c0B95131a2249C8663F56796
 
 ## Useful Links
 

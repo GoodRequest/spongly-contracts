@@ -1,6 +1,7 @@
 // The Open Zeppelin upgrades plugin adds the `upgrades` property
 // to the Hardhat Runtime Environment.
 import { ethers, network, upgrades } from 'hardhat'
+
 import { setDeploymentAddress } from '../utils/helpers'
 
 const contractName = 'CopyableParlayAMM'
@@ -44,6 +45,9 @@ async function main() {
 	await copyableParlayAMM.deployed()
 
 	console.log(`${contractName} deployed to:`, copyableParlayAMM.address)
+
+	// store the contract address in the deployment addresses json
+	setDeploymentAddress(contractName, copyableParlayAMM.address, network.name)
 }
 
 main()
