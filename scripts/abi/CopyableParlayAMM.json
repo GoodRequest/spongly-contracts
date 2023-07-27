@@ -207,7 +207,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_originalParlayAddress",
+        "name": "_parlayAddress",
         "type": "address"
       },
       {
@@ -225,7 +225,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_originalParlayAddress",
+        "name": "_parlayAddress",
         "type": "address"
       },
       {
@@ -291,7 +291,7 @@
         "type": "address"
       }
     ],
-    "name": "getCoppiedParlayDetails",
+    "name": "getCopiedParlayDetails",
     "outputs": [
       {
         "components": [
@@ -311,7 +311,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct CopyableParlayAMM.CoppiedParlayDetails",
+        "internalType": "struct CopyableParlayAMM.CopiedParlayDetails",
         "name": "",
         "type": "tuple"
       }
@@ -404,6 +404,16 @@
         "internalType": "contract IERC20Upgradeable",
         "name": "_sUSD",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_referrer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxAllowedPegSlippagePercentage",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -487,6 +497,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "retrieveSUSDAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -588,7 +616,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_reffererAddress",
+        "name": "_refferer",
         "type": "address"
       }
     ],

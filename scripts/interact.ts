@@ -17,9 +17,11 @@ const signer = new ethers.Wallet(PRIVATE_KEY, infuraProvider)
 const copyableParlayAMMContract = new ethers.Contract(contractAddress, contractABI, signer)
 
 async function main() {
-	// const copyableParlayAMM = await copyableParlayAMMContract.copyFromParlayWithReferrer('0x0ec9d8dac2178b041f85f60e3cf13cfaa3d23e0e', 4000000000000000000n)
+	const t = await copyableParlayAMMContract.buyFromParlay(['0x0ec9d8dac2178b041f85f60e3cf13cfaa3d23e0e'], [0], 4000000000000000000n)
 
-	console.log(network)
+	await t.wait()
+
+	// copyableParlayAMM.buyFromParlay(['0x0ec9d8dac2178b041f85f60e3cf13cfaa3d23e0e'], [], 4000000000000000000n)
 }
 
 main()

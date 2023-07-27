@@ -37,9 +37,8 @@ const config: HardhatUserConfig = {
 			chainId: 31337
 		},
 		goerli: {
-			url: 'https://optimism-goerli.infura.io/v3/' + INFURA_API_KEY,
-			accounts: [PRIVATE_KEY],
-			chainId: 5
+			url: 'https://goerli.infura.io/v3/' + INFURA_API_KEY,
+			accounts: [PRIVATE_KEY]
 		},
 		ropsten: {
 			gasPrice: 'auto',
@@ -63,7 +62,7 @@ const config: HardhatUserConfig = {
 		optimisticGoerli: {
 			gasPrice: 10000,
 			chainId: 420,
-			url: 'https://goerli.optimism.io',
+			url: 'https://optimism-goerli.infura.io/v3/' + INFURA_API_KEY,
 			accounts: [PRIVATE_KEY]
 		},
 		polygonMumbai: {
@@ -117,12 +116,15 @@ const config: HardhatUserConfig = {
 			rinkeby: ETHERSCAN_KEY,
 			goerli: ETHERSCAN_KEY,
 			kovan: ETHERSCAN_KEY,
+
 			// optimism
 			optimisticEthereum: OP_ETHERSCAN_KEY,
 			optimisticGoerli: OP_ETHERSCAN_KEY,
+
 			// polygon
 			polygon: POLYGONSCAN_API_KEY,
 			polygonMumbai: POLYGONSCAN_API_KEY
+
 			// bsc: BSC_API_KEY,
 			// arbitrumOne: ARBITRUM_API_KEY
 		}

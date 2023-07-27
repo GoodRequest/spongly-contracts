@@ -1,0 +1,1 @@
+export const GNOSIS_SAFE_WALLET_ADDRESS = '0x0ec9d8dac2178b041f85f60e3cf13cfaa3d23e0e'
