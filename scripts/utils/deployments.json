@@ -1,5 +1,6 @@
 {
-	"optimisticGoerli": {
-		"CopyableParlayAMM": "0x407085F8a5C4B9ED06d4b18e7A14d266b3C64EaB"
-	}
+    "optimisticGoerli": {
+        "CopyableParlayAMM": "0xDae74BcC47b76585868584718852A7B09c8DB218",
+        "CopyableSportsAMM": "0x3740fF87F772122EE695540f3AF23191bE1A9302"
+    }
 }

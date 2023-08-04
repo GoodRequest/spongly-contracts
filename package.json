@@ -1,14 +1,14 @@
 {
 	"name": "spongly-contracts",
-	"version": "1.0.0",
-	"description": "Smart contracts for Spongly dApp",
+	"version": "0.1.0",
+	"description": "Smart contracts for Spongly dapp",
 	"author": "GoodRequest s.r.o.",
 	"license": "MIT",
 	"scripts": {
-		"compile": "yarn hardhat compile",
 		"test": "yarn hardhat test",
-		"lint": "yarn solhint contracts/*.sol",
-		"export-abi": "yarn hardhat export-abi --no-compile"
+		"compile": "yarn hardhat compile",
+		"export-abi": "yarn hardhat export-abi --no-compile",
+		"lint": "yarn solhint contracts/**/*.sol"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-chai-matchers": "1.0.0",
