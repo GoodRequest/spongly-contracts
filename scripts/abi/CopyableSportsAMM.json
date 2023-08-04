@@ -5,7 +5,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_parlayMarketsAMM",
+        "name": "sportsAMMAddress",
         "type": "address"
       }
     ],
@@ -66,6 +66,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "marketAddress",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "walletAddress",
+        "type": "address"
+      }
+    ],
+    "name": "MarketCopied",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "address",
         "name": "oldOwner",
@@ -98,25 +117,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "parlayAddress",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "walletAddress",
-        "type": "address"
-      }
-    ],
-    "name": "ParlayCopied",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "bool",
         "name": "isPaused",
@@ -136,14 +136,14 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "_sportMarkets",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "_sportMarket",
+        "type": "address"
       },
       {
-        "internalType": "uint256[]",
-        "name": "_positions",
-        "type": "uint256[]"
+        "internalType": "enum ISportsAMM.Position",
+        "name": "_position",
+        "type": "uint8"
       },
       {
         "internalType": "uint256",
@@ -162,17 +162,12 @@
       },
       {
         "internalType": "address",
-        "name": "_differentRecepient",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_refferer",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_copiedFromParlay",
+        "name": "_copiedFromMarket",
         "type": "address"
       },
       {
@@ -181,7 +176,7 @@
         "type": "bool"
       }
     ],
-    "name": "buyFromParlayWithCopy",
+    "name": "buyFromAMMWithCopy",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -189,14 +184,14 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "_sportMarkets",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "_sportMarket",
+        "type": "address"
       },
       {
-        "internalType": "uint256[]",
-        "name": "_positions",
-        "type": "uint256[]"
+        "internalType": "enum ISportsAMM.Position",
+        "name": "_position",
+        "type": "uint8"
       },
       {
         "internalType": "uint256",
@@ -225,7 +220,7 @@
       },
       {
         "internalType": "address",
-        "name": "_copiedFromParlay",
+        "name": "_copiedFromMarket",
         "type": "address"
       },
       {
@@ -282,11 +277,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_parlayAddress",
+        "name": "_marketAddress",
         "type": "address"
       }
     ],
-    "name": "getCopiedParlayDetails",
+    "name": "getCopiedMarketDetails",
     "outputs": [
       {
         "components": [
@@ -311,7 +306,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct CopyableParlayAMM.CopiedParlayDetails",
+        "internalType": "struct CopyableSportsAMM.CopiedMarketDetails",
         "name": "",
         "type": "tuple"
       }
@@ -323,11 +318,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_parlayAddress",
+        "name": "_marketAddress",
         "type": "address"
       }
     ],
-    "name": "getParlayCopiedCount",
+    "name": "getMarketCopiedCount",
     "outputs": [
       {
         "internalType": "uint256[2]",
@@ -342,11 +337,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_parlayAddress",
+        "name": "_marketAddress",
         "type": "address"
       }
     ],
-    "name": "getParlayWallets",
+    "name": "getMarketWallets",
     "outputs": [
       {
         "internalType": "address[]",
@@ -365,7 +360,7 @@
         "type": "address"
       }
     ],
-    "name": "getWalletParlays",
+    "name": "getWalletMarkets",
     "outputs": [
       {
         "internalType": "address[]",
@@ -392,7 +387,7 @@
       },
       {
         "internalType": "address",
-        "name": "_parlayMarketsAMMAddress",
+        "name": "_sportsAMMAddress",
         "type": "address"
       },
       {
@@ -506,7 +501,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_parlayMarketsAMM",
+        "name": "_sportsAMMAddress",
         "type": "address"
       }
     ],

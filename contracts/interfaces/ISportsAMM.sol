@@ -57,6 +57,25 @@ interface ISportsAMM {
         uint additionalSlippage
     ) external;
 
+    function buyFromAMMWithReferrer(
+        address market,
+        ISportsAMM.Position position,
+        uint amount,
+        uint expectedPayout,
+        uint additionalSlippage,
+        address _referrer
+    ) external;
+
+    function buyFromAMMWithDifferentCollateralAndReferrer(
+        address market,
+        ISportsAMM.Position position,
+        uint amount,
+        uint expectedPayout,
+        uint additionalSlippage,
+        address collateral,
+        address _referrer
+    ) external;
+
     function buyFromAmmQuote(
         address market,
         Position position,
