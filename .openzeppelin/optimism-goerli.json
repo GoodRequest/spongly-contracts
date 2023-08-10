@@ -3599,7 +3599,7 @@
             "slot": "6",
             "type": "t_mapping(t_address,t_struct(CopiedMarketDetails)1557_storage)",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:31"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:31"
           },
           {
             "label": "marketToWallets",
@@ -3607,7 +3607,7 @@
             "slot": "7",
             "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:32"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:32"
           },
           {
             "label": "walletToMarkets",
@@ -3615,7 +3615,7 @@
             "slot": "8",
             "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:33"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:33"
           },
           {
             "label": "sportsAMM",
@@ -3623,7 +3623,7 @@
             "slot": "9",
             "type": "t_contract(ISportsAMM)2677",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:35"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:35"
           },
           {
             "label": "sUSD",
@@ -3631,7 +3631,7 @@
             "slot": "10",
             "type": "t_contract(IERC20Upgradeable)246",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:38"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:38"
           },
           {
             "label": "curveSUSD",
@@ -3639,7 +3639,7 @@
             "slot": "11",
             "type": "t_contract(ICurveSUSD)2193",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:41"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:41"
           },
           {
             "label": "usdc",
@@ -3647,7 +3647,7 @@
             "slot": "12",
             "type": "t_address",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:44"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:44"
           },
           {
             "label": "usdt",
@@ -3655,7 +3655,7 @@
             "slot": "13",
             "type": "t_address",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:47"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:47"
           },
           {
             "label": "dai",
@@ -3663,7 +3663,7 @@
             "slot": "14",
             "type": "t_address",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:50"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:50"
           },
           {
             "label": "curveOnrampEnabled",
@@ -3671,7 +3671,7 @@
             "slot": "14",
             "type": "t_bool",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:53"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:53"
           },
           {
             "label": "maxAllowedPegSlippagePercentage",
@@ -3679,7 +3679,7 @@
             "slot": "15",
             "type": "t_uint256",
             "contract": "CopyableSportsAMM",
-            "src": "contracts/CopyableSportsAMM.sol:56"
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:56"
           }
         ],
         "types": {
@@ -3967,6 +3967,256 @@
           },
           "t_struct(CopiedParlayDetails)895_storage": {
             "label": "struct CopyableParlayAMM.CopiedParlayDetails",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "modifiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "04788aad7fc61eb77e70e18935766ec0b9d72d0ddb0ddf5176e40a64af519eb6": {
+      "address": "0xF80a2303195fd8AD40Aa893080C6089784A761c1",
+      "txHash": "0xbe5f898a4acb0634bf973bec4365b8b1e97b1582f6a5af95da3c9a7cc200f8f0",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "copiedMarkets",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CopiedMarketDetails)895_storage)",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:31"
+          },
+          {
+            "label": "marketToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:32"
+          },
+          {
+            "label": "walletToMarkets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:33"
+          },
+          {
+            "label": "sportsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(ISportsAMM)1760",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:35"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:38"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(ICurveSUSD)1531",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:41"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_address",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:44"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:47"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:50"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "14",
+            "type": "t_bool",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:53"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_uint256",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:56"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)1531": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISportsAMM)1760": {
+            "label": "contract ISportsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CopiedMarketDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableSportsAMM.CopiedMarketDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CopiedMarketDetails)895_storage": {
+            "label": "struct CopyableSportsAMM.CopiedMarketDetails",
             "members": [
               {
                 "label": "owner",

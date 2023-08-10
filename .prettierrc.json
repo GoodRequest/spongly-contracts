@@ -1,11 +1,12 @@
 {
+	"plugins": ["prettier-plugin-solidity"],
 	"overrides": [
 		{
 			"files": "*.sol",
 			"options": {
 				"printWidth": 125,
 				"tabWidth": 4,
-				"useTabs": false,
+				"useTabs": true,
 				"singleQuote": false,
 				"bracketSpacing": false,
 				"explicitTypes": "preserve"

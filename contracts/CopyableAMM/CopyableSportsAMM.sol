@@ -15,238 +15,238 @@ import "../utils/proxy/solidity-0.8.0/ProxyOwned.sol";
 import "../utils/proxy/solidity-0.8.0/ProxyPausable.sol";
 
 contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyReentrancyGuard {
-    using SafeERC20Upgradeable for IERC20Upgradeable;
+	using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    uint private constant ONE = 1e18;
-    uint private constant ONE_PERCENT = 1e16;
-    uint private constant MAX_APPROVAL = type(uint256).max;
+	uint private constant ONE = 1e18;
+	uint private constant ONE_PERCENT = 1e16;
+	uint private constant MAX_APPROVAL = type(uint256).max;
 
-    struct CopiedMarketDetails {
-        address owner;
-        uint256 copiedCount;
-        uint256 modifiedCount;
-        uint256 lastCopiedTime;
-    }
+	struct CopiedMarketDetails {
+		address owner;
+		uint256 copiedCount;
+		uint256 modifiedCount;
+		uint256 lastCopiedTime;
+	}
 
-    mapping(address => CopiedMarketDetails) private copiedMarkets;
-    mapping(address => address[]) private marketToWallets;
-    mapping(address => address[]) private walletToMarkets;
+	mapping(address => CopiedMarketDetails) private copiedMarkets;
+	mapping(address => address[]) private marketToWallets;
+	mapping(address => address[]) private walletToMarkets;
 
-    ISportsAMM private sportsAMM;
+	ISportsAMM private sportsAMM;
 
-    /// @return The sUSD contract used for payment
-    IERC20Upgradeable public sUSD;
+	/// @return The sUSD contract used for payment
+	IERC20Upgradeable public sUSD;
 
-    /// @return The address of the Curve contract for multi-collateral
-    ICurveSUSD public curveSUSD;
+	/// @return The address of the Curve contract for multi-collateral
+	ICurveSUSD public curveSUSD;
 
-    /// @return The address of USDC
-    address public usdc;
+	/// @return The address of USDC
+	address public usdc;
 
-    /// @return The address of USDT (Tether)
-    address public usdt;
+	/// @return The address of USDT (Tether)
+	address public usdt;
 
-    /// @return The address of DAI
-    address public dai;
+	/// @return The address of DAI
+	address public dai;
 
-    /// @return Curve usage is enabled?
-    bool public curveOnrampEnabled;
+	/// @return Curve usage is enabled?
+	bool public curveOnrampEnabled;
 
-    /// @return maximum supported discount in percentage on sUSD purchases with different collaterals
-    uint public maxAllowedPegSlippagePercentage;
+	/// @return maximum supported discount in percentage on sUSD purchases with different collaterals
+	uint public maxAllowedPegSlippagePercentage;
 
-    function initialize(
-        address _owner,
-        address _sportsAMMAddress,
-        IERC20Upgradeable _sUSD,
-        uint _maxAllowedPegSlippagePercentage
-    ) public initializer {
-        setOwner(_owner);
-        initNonReentrant();
-        sportsAMM = ISportsAMM(_sportsAMMAddress);
-        sUSD = _sUSD;
-        maxAllowedPegSlippagePercentage = _maxAllowedPegSlippagePercentage;
+	function initialize(
+		address _owner,
+		address _sportsAMMAddress,
+		IERC20Upgradeable _sUSD,
+		uint _maxAllowedPegSlippagePercentage
+	) public initializer {
+		setOwner(_owner);
+		initNonReentrant();
+		sportsAMM = ISportsAMM(_sportsAMMAddress);
+		sUSD = _sUSD;
+		maxAllowedPegSlippagePercentage = _maxAllowedPegSlippagePercentage;
 
-        // approve sUSD to sportsAMM
-        sUSD.approve(address(sportsAMM), MAX_APPROVAL);
-    }
+		// approve sUSD to sportsAMM
+		sUSD.approve(address(sportsAMM), MAX_APPROVAL);
+	}
 
-    /* ========== EXTERNAL FUNCTIONS ========== */
+	/* ========== EXTERNAL FUNCTIONS ========== */
 
-    function buyFromAMMWithCopy(
-        address _sportMarket,
-        ISportsAMM.Position _position,
-        uint256 _sUSDPaid,
-        uint _additionalSlippage,
-        uint _expectedPayout,
-        address _refferer,
-        address _copiedFromMarket,
-        bool _modified
-    ) external nonReentrant notPaused {
-        // transfer sUSD from msg.sender
-        sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
+	function buyFromAMMWithCopy(
+		address _sportMarket,
+		ISportsAMM.Position _position,
+		uint256 _sUSDPaid,
+		uint _additionalSlippage,
+		uint _expectedPayout,
+		address _refferer,
+		address _copiedFromMarket,
+		bool _modified
+	) external nonReentrant notPaused {
+		// transfer sUSD from msg.sender
+		sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
 
-        sportsAMM.buyFromAMMWithReferrer(
-            _sportMarket,
-            _position,
-            _sUSDPaid,
-            _additionalSlippage,
-            _expectedPayout,
-            _refferer
-        );
+		sportsAMM.buyFromAMMWithReferrer(
+			_sportMarket,
+			_position,
+			_sUSDPaid,
+			_expectedPayout,
+			_additionalSlippage,
+			_refferer
+		);
 
-        // store new copied parlay
-        _handleCopyStore(_copiedFromMarket, _modified);
-    }
+		// store new copied parlay
+		_handleCopyStore(_copiedFromMarket, _modified);
+	}
 
-    // write a solidity jsdoc comment for this function parameters
-    function buyFromParlayWithCopyAndDifferentCollateral(
-        address _sportMarket,
-        ISportsAMM.Position _position,
-        uint256 _sUSDPaid,
-        uint _additionalSlippage,
-        uint _expectedPayout,
-        address _collateral,
-        address _refferer,
-        address _copiedFromMarket,
-        bool _modified
-    ) external nonReentrant notPaused {
-        int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
-        require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
+	// write a solidity jsdoc comment for this function parameters
+	function buyFromParlayWithCopyAndDifferentCollateral(
+		address _sportMarket,
+		ISportsAMM.Position _position,
+		uint256 _sUSDPaid,
+		uint _additionalSlippage,
+		uint _expectedPayout,
+		address _collateral,
+		address _refferer,
+		address _copiedFromMarket,
+		bool _modified
+	) external nonReentrant notPaused {
+		int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
+		require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
 
-        // cant get a quote on how much collateral is needed from curve for sUSD,
-        // so rather get how much of collateral you get for the sUSD quote and add 0.2% to that
-        uint collateralQuote = (curveSUSD.get_dy_underlying(0, curveIndex, _sUSDPaid) * (ONE + (ONE_PERCENT / (5)))) / ONE;
+		// cant get a quote on how much collateral is needed from curve for sUSD,
+		// so rather get how much of collateral you get for the sUSD quote and add 0.2% to that
+		uint collateralQuote = (curveSUSD.get_dy_underlying(0, curveIndex, _sUSDPaid) * (ONE + (ONE_PERCENT / (5)))) / ONE;
 
-        uint transformedCollateralForPegCheck = _collateral == usdc || _collateral == usdt
-            ? collateralQuote * 1e12
-            : collateralQuote;
-        require(
-            maxAllowedPegSlippagePercentage > 0 &&
-                transformedCollateralForPegCheck >= (_sUSDPaid * (ONE - maxAllowedPegSlippagePercentage)) / ONE,
-            "Amount below max allowed peg slippage"
-        );
+		uint transformedCollateralForPegCheck = _collateral == usdc || _collateral == usdt
+			? collateralQuote * 1e12
+			: collateralQuote;
+		require(
+			maxAllowedPegSlippagePercentage > 0 &&
+				transformedCollateralForPegCheck >= (_sUSDPaid * (ONE - maxAllowedPegSlippagePercentage)) / ONE,
+			"Amount below max allowed peg slippage"
+		);
 
-        require((collateralQuote * ONE) / (_sUSDPaid) <= (ONE + _additionalSlippage), "Slippage too high!");
+		require((collateralQuote * ONE) / (_sUSDPaid) <= (ONE + _additionalSlippage), "Slippage too high!");
 
-        IERC20Upgradeable collateralToken = IERC20Upgradeable(_collateral);
-        collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
-        curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
+		IERC20Upgradeable collateralToken = IERC20Upgradeable(_collateral);
+		collateralToken.safeTransferFrom(msg.sender, address(this), collateralQuote);
+		curveSUSD.exchange_underlying(curveIndex, 0, collateralQuote, _sUSDPaid);
 
-        sportsAMM.buyFromAMMWithDifferentCollateralAndReferrer(
-            _sportMarket,
-            _position,
-            _sUSDPaid,
-            _additionalSlippage,
-            _expectedPayout,
-            _collateral,
-            _refferer
-        );
+		sportsAMM.buyFromAMMWithDifferentCollateralAndReferrer(
+			_sportMarket,
+			_position,
+			_sUSDPaid,
+			_expectedPayout,
+			_additionalSlippage,
+			_collateral,
+			_refferer
+		);
 
-        // store new copied parlay
-        _handleCopyStore(_copiedFromMarket, _modified);
-    }
+		// store new copied parlay
+		_handleCopyStore(_copiedFromMarket, _modified);
+	}
 
-    /* ========== INTERNAL FUNCTIONS ========== */
+	/* ========== INTERNAL FUNCTIONS ========== */
 
-    function _handleCopyStore(address _marketAddress, bool _modified) internal {
-        CopiedMarketDetails storage market = copiedMarkets[_marketAddress];
+	function _handleCopyStore(address _marketAddress, bool _modified) internal {
+		CopiedMarketDetails storage market = copiedMarkets[_marketAddress];
 
-        if (market.owner == address(0)) {
-            uint256 modifiedCount = 0;
+		if (market.owner == address(0)) {
+			uint256 modifiedCount = 0;
 
-            if (_modified) {
-                modifiedCount++;
-            }
+			if (_modified) {
+				modifiedCount++;
+			}
 
-            copiedMarkets[_marketAddress] = CopiedMarketDetails(msg.sender, 1, modifiedCount, block.timestamp);
-        } else {
-            market.copiedCount++;
-            market.lastCopiedTime = block.timestamp;
+			copiedMarkets[_marketAddress] = CopiedMarketDetails(msg.sender, 1, modifiedCount, block.timestamp);
+		} else {
+			market.copiedCount++;
+			market.lastCopiedTime = block.timestamp;
 
-            if (_modified) {
-                market.modifiedCount++;
-            }
+			if (_modified) {
+				market.modifiedCount++;
+			}
 
-            marketToWallets[_marketAddress].push(msg.sender);
-            walletToMarkets[msg.sender].push(_marketAddress);
-        }
+			marketToWallets[_marketAddress].push(msg.sender);
+			walletToMarkets[msg.sender].push(_marketAddress);
+		}
 
-        emit MarketCopied(_marketAddress, msg.sender);
-    }
+		emit MarketCopied(_marketAddress, msg.sender);
+	}
 
-    function _mapCollateralToCurveIndex(address collateral) internal view returns (int128) {
-        if (collateral == dai) {
-            return 1;
-        }
-        if (collateral == usdc) {
-            return 2;
-        }
-        if (collateral == usdt) {
-            return 3;
-        }
-        return 0;
-    }
+	function _mapCollateralToCurveIndex(address collateral) internal view returns (int128) {
+		if (collateral == dai) {
+			return 1;
+		}
+		if (collateral == usdc) {
+			return 2;
+		}
+		if (collateral == usdt) {
+			return 3;
+		}
+		return 0;
+	}
 
-    /* ========== VIEW FUNCTIONS ========== */
+	/* ========== VIEW FUNCTIONS ========== */
 
-    function getCopiedMarketDetails(address _marketAddress) public view returns (CopiedMarketDetails memory) {
-        return copiedMarkets[_marketAddress];
-    }
+	function getCopiedMarketDetails(address _marketAddress) public view returns (CopiedMarketDetails memory) {
+		return copiedMarkets[_marketAddress];
+	}
 
-    function getMarketWallets(address _marketAddress) public view returns (address[] memory) {
-        return marketToWallets[_marketAddress];
-    }
+	function getMarketWallets(address _marketAddress) public view returns (address[] memory) {
+		return marketToWallets[_marketAddress];
+	}
 
-    function getWalletMarkets(address _walletAddress) public view returns (address[] memory) {
-        return walletToMarkets[_walletAddress];
-    }
+	function getWalletMarkets(address _walletAddress) public view returns (address[] memory) {
+		return walletToMarkets[_walletAddress];
+	}
 
-    function getMarketCopiedCount(address _marketAddress) public view returns (uint256[2] memory) {
-        CopiedMarketDetails memory market = copiedMarkets[_marketAddress];
-        return [market.copiedCount, market.modifiedCount];
-    }
+	function getMarketCopiedCount(address _marketAddress) public view returns (uint256[2] memory) {
+		CopiedMarketDetails memory market = copiedMarkets[_marketAddress];
+		return [market.copiedCount, market.modifiedCount];
+	}
 
-    /* ========== SETTERS FUNCTIONS ========== */
+	/* ========== SETTERS FUNCTIONS ========== */
 
-    function setAddresses(address _sportsAMMAddress) external onlyOwner {
-        sportsAMM = ISportsAMM(_sportsAMMAddress);
-        sUSD.approve(address(sportsAMM), MAX_APPROVAL);
-        emit AddressesSet(_sportsAMMAddress);
-    }
+	function setAddresses(address _sportsAMMAddress) external onlyOwner {
+		sportsAMM = ISportsAMM(_sportsAMMAddress);
+		sUSD.approve(address(sportsAMM), MAX_APPROVAL);
+		emit AddressesSet(_sportsAMMAddress);
+	}
 
-    /// @notice Setting the Curve collateral addresses for all collaterals
-    /// @param _curveSUSD Address of the Curve contract
-    /// @param _dai Address of the DAI contract
-    /// @param _usdc Address of the USDC contract
-    /// @param _usdt Address of the USDT (Tether) contract
-    /// @param _maxAllowedPegSlippagePercentage maximum discount AMM accepts for sUSD purchases
-    function setCurveSUSD(
-        address _curveSUSD,
-        address _dai,
-        address _usdc,
-        address _usdt,
-        bool _curveOnrampEnabled,
-        uint _maxAllowedPegSlippagePercentage
-    ) external onlyOwner {
-        curveSUSD = ICurveSUSD(_curveSUSD);
-        dai = _dai;
-        usdc = _usdc;
-        usdt = _usdt;
+	/// @notice Setting the Curve collateral addresses for all collaterals
+	/// @param _curveSUSD Address of the Curve contract
+	/// @param _dai Address of the DAI contract
+	/// @param _usdc Address of the USDC contract
+	/// @param _usdt Address of the USDT (Tether) contract
+	/// @param _maxAllowedPegSlippagePercentage maximum discount AMM accepts for sUSD purchases
+	function setCurveSUSD(
+		address _curveSUSD,
+		address _dai,
+		address _usdc,
+		address _usdt,
+		bool _curveOnrampEnabled,
+		uint _maxAllowedPegSlippagePercentage
+	) external onlyOwner {
+		curveSUSD = ICurveSUSD(_curveSUSD);
+		dai = _dai;
+		usdc = _usdc;
+		usdt = _usdt;
 
-        IERC20Upgradeable(dai).approve(_curveSUSD, MAX_APPROVAL);
-        IERC20Upgradeable(usdc).approve(_curveSUSD, MAX_APPROVAL);
-        IERC20Upgradeable(usdt).approve(_curveSUSD, MAX_APPROVAL);
+		IERC20Upgradeable(dai).approve(_curveSUSD, MAX_APPROVAL);
+		IERC20Upgradeable(usdc).approve(_curveSUSD, MAX_APPROVAL);
+		IERC20Upgradeable(usdt).approve(_curveSUSD, MAX_APPROVAL);
 
-        // not needed unless selling into different collateral is enabled
-        // sUSD.approve(_curveSUSD, MAX_APPROVAL);
-        curveOnrampEnabled = _curveOnrampEnabled;
-        maxAllowedPegSlippagePercentage = _maxAllowedPegSlippagePercentage;
+		// not needed unless selling into different collateral is enabled
+		// sUSD.approve(_curveSUSD, MAX_APPROVAL);
+		curveOnrampEnabled = _curveOnrampEnabled;
+		maxAllowedPegSlippagePercentage = _maxAllowedPegSlippagePercentage;
 
-        emit CurveParametersUpdated(_curveSUSD, _dai, _usdc, _usdt, _curveOnrampEnabled);
-    }
+		emit CurveParametersUpdated(_curveSUSD, _dai, _usdc, _usdt, _curveOnrampEnabled);
+	}
 
-    event AddressesSet(address sportsAMMAddress);
-    event MarketCopied(address indexed marketAddress, address indexed walletAddress);
-    event CurveParametersUpdated(address curveSUSD, address dai, address usdc, address usdt, bool curveOnrampEnabled);
+	event AddressesSet(address sportsAMMAddress);
+	event MarketCopied(address indexed marketAddress, address indexed walletAddress);
+	event CurveParametersUpdated(address curveSUSD, address dai, address usdc, address usdt, bool curveOnrampEnabled);
 }
