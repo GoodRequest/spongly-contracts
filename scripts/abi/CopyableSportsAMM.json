@@ -67,9 +67,9 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "marketAddress",
-        "type": "address"
+        "internalType": "string",
+        "name": "marketID",
+        "type": "string"
       },
       {
         "indexed": true,
@@ -166,9 +166,9 @@
         "type": "address"
       },
       {
-        "internalType": "address",
+        "internalType": "string",
         "name": "_copiedFromMarket",
-        "type": "address"
+        "type": "string"
       },
       {
         "internalType": "bool",
@@ -219,9 +219,9 @@
         "type": "address"
       },
       {
-        "internalType": "address",
+        "internalType": "string",
         "name": "_copiedFromMarket",
-        "type": "address"
+        "type": "string"
       },
       {
         "internalType": "bool",
@@ -276,9 +276,9 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "string",
         "name": "_marketAddress",
-        "type": "address"
+        "type": "string"
       }
     ],
     "name": "getCopiedMarketDetails",
@@ -286,9 +286,9 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
+            "internalType": "bool",
+            "name": "wasCopied",
+            "type": "bool"
           },
           {
             "internalType": "uint256",
@@ -317,9 +317,9 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "string",
         "name": "_marketAddress",
-        "type": "address"
+        "type": "string"
       }
     ],
     "name": "getMarketCopiedCount",
@@ -336,9 +336,9 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "string",
         "name": "_marketAddress",
-        "type": "address"
+        "type": "string"
       }
     ],
     "name": "getMarketWallets",
@@ -363,9 +363,9 @@
     "name": "getWalletMarkets",
     "outputs": [
       {
-        "internalType": "address[]",
+        "internalType": "string[]",
         "name": "",
-        "type": "address[]"
+        "type": "string[]"
       }
     ],
     "stateMutability": "view",

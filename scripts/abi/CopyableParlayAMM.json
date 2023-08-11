@@ -291,9 +291,9 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
+            "internalType": "bool",
+            "name": "wasCopied",
+            "type": "bool"
           },
           {
             "internalType": "uint256",
