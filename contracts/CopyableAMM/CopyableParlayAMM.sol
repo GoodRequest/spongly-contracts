@@ -22,7 +22,7 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
     uint private constant MAX_APPROVAL = type(uint256).max;
 
     struct CopiedParlayDetails {
-        address owner;
+        bool wasCopied;
         uint256 copiedCount;
         uint256 modifiedCount;
         uint256 lastCopiedTime;
@@ -96,7 +96,9 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         );
 
         // store new copied parlay
-        _handleParlayStore(_copiedFromParlay, _modified);
+        if (_copiedFromParlay == address(0)) {
+            _handleDataStore(_copiedFromParlay, _modified);
+        }
     }
 
     function buyFromParlayWithCopyAndDifferentCollateral(
@@ -143,22 +145,24 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
         );
 
         // store new copied parlay
-        _handleParlayStore(_copiedFromParlay, _modified);
+        if (_copiedFromParlay == address(0)) {
+            _handleDataStore(_copiedFromParlay, _modified);
+        }
     }
 
     /* ========== INTERNAL FUNCTIONS ========== */
 
-    function _handleParlayStore(address _parlayAddress, bool _modified) internal {
+    function _handleDataStore(address _parlayAddress, bool _modified) internal {
         CopiedParlayDetails storage parlay = copiedParlays[_parlayAddress];
 
-        if (parlay.owner == address(0)) {
+        if (parlay.wasCopied == false) {
             uint256 modifiedCount = 0;
 
             if (_modified) {
                 modifiedCount++;
             }
 
-            copiedParlays[_parlayAddress] = CopiedParlayDetails(msg.sender, 1, modifiedCount, block.timestamp);
+            copiedParlays[_parlayAddress] = CopiedParlayDetails(true, 1, modifiedCount, block.timestamp);
         } else {
             parlay.copiedCount++;
             parlay.lastCopiedTime = block.timestamp;
@@ -166,10 +170,10 @@ contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
             if (_modified) {
                 parlay.modifiedCount++;
             }
-
-            parlayToWallets[_parlayAddress].push(msg.sender);
-            walletToParlays[msg.sender].push(_parlayAddress);
         }
+
+        parlayToWallets[_parlayAddress].push(msg.sender);
+        walletToParlays[msg.sender].push(_parlayAddress);
 
         emit ParlayCopied(_parlayAddress, msg.sender);
     }

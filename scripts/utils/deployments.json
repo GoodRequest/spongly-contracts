@@ -2,5 +2,9 @@
     "optimisticGoerli": {
         "CopyableParlayAMM": "0xDae74BcC47b76585868584718852A7B09c8DB218",
         "CopyableSportsAMM": "0x3740fF87F772122EE695540f3AF23191bE1A9302"
+    },
+    "localhost": {
+        "CopyableParlayAMM": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+        "CopyableSportsAMM": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933"
     }
 }

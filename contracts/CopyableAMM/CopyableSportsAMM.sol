@@ -22,15 +22,15 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 	uint private constant MAX_APPROVAL = type(uint256).max;
 
 	struct CopiedMarketDetails {
-		address owner;
+		bool wasCopied;
 		uint256 copiedCount;
 		uint256 modifiedCount;
 		uint256 lastCopiedTime;
 	}
 
-	mapping(address => CopiedMarketDetails) private copiedMarkets;
-	mapping(address => address[]) private marketToWallets;
-	mapping(address => address[]) private walletToMarkets;
+	mapping(string => CopiedMarketDetails) private copiedMarkets;
+	mapping(string => address[]) private marketToWallets;
+	mapping(address => string[]) private walletToMarkets;
 
 	ISportsAMM private sportsAMM;
 
@@ -80,7 +80,7 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		uint _additionalSlippage,
 		uint _expectedPayout,
 		address _refferer,
-		address _copiedFromMarket,
+		string calldata _copiedFromMarket,
 		bool _modified
 	) external nonReentrant notPaused {
 		// transfer sUSD from msg.sender
@@ -96,7 +96,9 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		);
 
 		// store new copied parlay
-		_handleCopyStore(_copiedFromMarket, _modified);
+		if (bytes(_copiedFromMarket).length > 0) {
+			_handleDataStore(_copiedFromMarket, _modified);
+		}
 	}
 
 	// write a solidity jsdoc comment for this function parameters
@@ -108,7 +110,7 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		uint _expectedPayout,
 		address _collateral,
 		address _refferer,
-		address _copiedFromMarket,
+		string calldata _copiedFromMarket,
 		bool _modified
 	) external nonReentrant notPaused {
 		int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
@@ -144,22 +146,24 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		);
 
 		// store new copied parlay
-		_handleCopyStore(_copiedFromMarket, _modified);
+		if (bytes(_copiedFromMarket).length > 0) {
+			_handleDataStore(_copiedFromMarket, _modified);
+		}
 	}
 
 	/* ========== INTERNAL FUNCTIONS ========== */
 
-	function _handleCopyStore(address _marketAddress, bool _modified) internal {
+	function _handleDataStore(string calldata _marketAddress, bool _modified) internal {
 		CopiedMarketDetails storage market = copiedMarkets[_marketAddress];
 
-		if (market.owner == address(0)) {
+		if (market.wasCopied == false) {
 			uint256 modifiedCount = 0;
 
 			if (_modified) {
 				modifiedCount++;
 			}
 
-			copiedMarkets[_marketAddress] = CopiedMarketDetails(msg.sender, 1, modifiedCount, block.timestamp);
+			copiedMarkets[_marketAddress] = CopiedMarketDetails(true, 1, modifiedCount, block.timestamp);
 		} else {
 			market.copiedCount++;
 			market.lastCopiedTime = block.timestamp;
@@ -167,10 +171,10 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 			if (_modified) {
 				market.modifiedCount++;
 			}
-
-			marketToWallets[_marketAddress].push(msg.sender);
-			walletToMarkets[msg.sender].push(_marketAddress);
 		}
+
+		marketToWallets[_marketAddress].push(msg.sender);
+		walletToMarkets[msg.sender].push(_marketAddress);
 
 		emit MarketCopied(_marketAddress, msg.sender);
 	}
@@ -190,19 +194,19 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 
 	/* ========== VIEW FUNCTIONS ========== */
 
-	function getCopiedMarketDetails(address _marketAddress) public view returns (CopiedMarketDetails memory) {
+	function getCopiedMarketDetails(string calldata _marketAddress) public view returns (CopiedMarketDetails memory) {
 		return copiedMarkets[_marketAddress];
 	}
 
-	function getMarketWallets(address _marketAddress) public view returns (address[] memory) {
+	function getMarketWallets(string calldata _marketAddress) public view returns (address[] memory) {
 		return marketToWallets[_marketAddress];
 	}
 
-	function getWalletMarkets(address _walletAddress) public view returns (address[] memory) {
+	function getWalletMarkets(address _walletAddress) public view returns (string[] memory) {
 		return walletToMarkets[_walletAddress];
 	}
 
-	function getMarketCopiedCount(address _marketAddress) public view returns (uint256[2] memory) {
+	function getMarketCopiedCount(string calldata _marketAddress) public view returns (uint256[2] memory) {
 		CopiedMarketDetails memory market = copiedMarkets[_marketAddress];
 		return [market.copiedCount, market.modifiedCount];
 	}
@@ -247,6 +251,6 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 	}
 
 	event AddressesSet(address sportsAMMAddress);
-	event MarketCopied(address indexed marketAddress, address indexed walletAddress);
+	event MarketCopied(string indexed marketID, address indexed walletAddress);
 	event CurveParametersUpdated(address curveSUSD, address dai, address usdc, address usdt, bool curveOnrampEnabled);
 }
