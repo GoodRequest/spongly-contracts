@@ -10,9 +10,9 @@ import {ISportsAMM} from "../interfaces/ISportsAMM.sol";
 import {ICurveSUSD} from "../interfaces/ICurveSUSD.sol";
 
 // internal
-import "../utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol";
-import "../utils/proxy/solidity-0.8.0/ProxyOwned.sol";
-import "../utils/proxy/solidity-0.8.0/ProxyPausable.sol";
+import {ProxyReentrancyGuard} from "../utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol";
+import {ProxyOwned} from "../utils/proxy/solidity-0.8.0/ProxyOwned.sol";
+import {ProxyPausable} from "../utils/proxy/solidity-0.8.0/ProxyPausable.sol";
 
 contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyReentrancyGuard {
 	using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -24,7 +24,6 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 	struct CopiedMarketDetails {
 		bool wasCopied;
 		uint256 copiedCount;
-		uint256 modifiedCount;
 		uint256 lastCopiedTime;
 	}
 
@@ -80,8 +79,7 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		uint _additionalSlippage,
 		uint _expectedPayout,
 		address _refferer,
-		string calldata _copiedFromMarket,
-		bool _modified
+		string calldata _copiedFromMarket
 	) external nonReentrant notPaused {
 		// transfer sUSD from msg.sender
 		sUSD.safeTransferFrom(msg.sender, address(this), _sUSDPaid);
@@ -97,7 +95,7 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 
 		// store new copied parlay
 		if (bytes(_copiedFromMarket).length > 0) {
-			_handleDataStore(_copiedFromMarket, _modified);
+			_handleDataStore(_copiedFromMarket);
 		}
 	}
 
@@ -110,8 +108,7 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		uint _expectedPayout,
 		address _collateral,
 		address _refferer,
-		string calldata _copiedFromMarket,
-		bool _modified
+		string calldata _copiedFromMarket
 	) external nonReentrant notPaused {
 		int128 curveIndex = _mapCollateralToCurveIndex(_collateral);
 		require(curveIndex > 0 && curveOnrampEnabled, "unsupported collateral");
@@ -147,30 +144,20 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 
 		// store new copied parlay
 		if (bytes(_copiedFromMarket).length > 0) {
-			_handleDataStore(_copiedFromMarket, _modified);
+			_handleDataStore(_copiedFromMarket);
 		}
 	}
 
 	/* ========== INTERNAL FUNCTIONS ========== */
 
-	function _handleDataStore(string calldata _marketAddress, bool _modified) internal {
+	function _handleDataStore(string calldata _marketAddress) internal {
 		CopiedMarketDetails storage market = copiedMarkets[_marketAddress];
 
 		if (market.wasCopied == false) {
-			uint256 modifiedCount = 0;
-
-			if (_modified) {
-				modifiedCount++;
-			}
-
-			copiedMarkets[_marketAddress] = CopiedMarketDetails(true, 1, modifiedCount, block.timestamp);
+			copiedMarkets[_marketAddress] = CopiedMarketDetails(true, 1, block.timestamp);
 		} else {
 			market.copiedCount++;
 			market.lastCopiedTime = block.timestamp;
-
-			if (_modified) {
-				market.modifiedCount++;
-			}
 		}
 
 		marketToWallets[_marketAddress].push(msg.sender);
@@ -206,9 +193,9 @@ contract CopyableSportsAMM is Initializable, ProxyOwned, ProxyPausable, ProxyRee
 		return walletToMarkets[_walletAddress];
 	}
 
-	function getMarketCopiedCount(string calldata _marketAddress) public view returns (uint256[2] memory) {
+	function getMarketCopiedCount(string calldata _marketAddress) public view returns (uint256) {
 		CopiedMarketDetails memory market = copiedMarkets[_marketAddress];
-		return [market.copiedCount, market.modifiedCount];
+		return market.copiedCount;
 	}
 
 	/* ========== SETTERS FUNCTIONS ========== */

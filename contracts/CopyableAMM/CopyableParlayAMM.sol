@@ -10,9 +10,9 @@ import {IParlayMarketsAMM} from "../interfaces/IParlayMarketsAMM.sol";
 import {ICurveSUSD} from "../interfaces/ICurveSUSD.sol";
 
 // internal
-import "../utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol";
-import "../utils/proxy/solidity-0.8.0/ProxyOwned.sol";
-import "../utils/proxy/solidity-0.8.0/ProxyPausable.sol";
+import {ProxyReentrancyGuard} from "../utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol";
+import {ProxyOwned} from "../utils/proxy/solidity-0.8.0/ProxyOwned.sol";
+import {ProxyPausable} from "../utils/proxy/solidity-0.8.0/ProxyPausable.sol";
 
 contract CopyableParlayAMM is Initializable, ProxyOwned, ProxyPausable, ProxyReentrancyGuard {
     using SafeERC20Upgradeable for IERC20Upgradeable;

@@ -169,11 +169,6 @@
         "internalType": "string",
         "name": "_copiedFromMarket",
         "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "_modified",
-        "type": "bool"
       }
     ],
     "name": "buyFromAMMWithCopy",
@@ -222,11 +217,6 @@
         "internalType": "string",
         "name": "_copiedFromMarket",
         "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "_modified",
-        "type": "bool"
       }
     ],
     "name": "buyFromParlayWithCopyAndDifferentCollateral",
@@ -297,11 +287,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "modifiedCount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "lastCopiedTime",
             "type": "uint256"
           }
@@ -325,9 +310,9 @@
     "name": "getMarketCopiedCount",
     "outputs": [
       {
-        "internalType": "uint256[2]",
+        "internalType": "uint256",
         "name": "",
-        "type": "uint256[2]"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

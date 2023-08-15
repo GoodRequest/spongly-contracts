@@ -49,6 +49,16 @@
       "address": "0xDae74BcC47b76585868584718852A7B09c8DB218",
       "txHash": "0x9e444ff27d7e224e615d19985d5f4b9b6712f94151482f7c0679f957bc69b9a5",
       "kind": "transparent"
+    },
+    {
+      "address": "0xAC15F54F0597fFc26731bDBD5175b8dAe5748834",
+      "txHash": "0x147f1295ab2f288ff250e924aec8109a3cb2e0e2578c5f1a8040d7aef981b654",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x333D56dB36B82F15E28DC4Be352c4Ed44741975B",
+      "txHash": "0x8eab1868c99d9fb698970313a0b45ecf107709826f2f577bd02f1ae6ceb0d99f",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -4097,7 +4107,7 @@
             "label": "copiedMarkets",
             "offset": 0,
             "slot": "6",
-            "type": "t_mapping(t_address,t_struct(CopiedMarketDetails)895_storage)",
+            "type": "t_mapping(t_address,t_struct(CopiedMarketDetails)1557_storage)",
             "contract": "CopyableSportsAMM",
             "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:31"
           },
@@ -4121,7 +4131,7 @@
             "label": "sportsAMM",
             "offset": 0,
             "slot": "9",
-            "type": "t_contract(ISportsAMM)1760",
+            "type": "t_contract(ISportsAMM)2677",
             "contract": "CopyableSportsAMM",
             "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:35"
           },
@@ -4137,7 +4147,7 @@
             "label": "curveSUSD",
             "offset": 0,
             "slot": "11",
-            "type": "t_contract(ICurveSUSD)1531",
+            "type": "t_contract(ICurveSUSD)2193",
             "contract": "CopyableSportsAMM",
             "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:41"
           },
@@ -4195,7 +4205,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(ICurveSUSD)1531": {
+          "t_contract(ICurveSUSD)2193": {
             "label": "contract ICurveSUSD",
             "numberOfBytes": "20"
           },
@@ -4203,7 +4213,7 @@
             "label": "contract IERC20Upgradeable",
             "numberOfBytes": "20"
           },
-          "t_contract(ISportsAMM)1760": {
+          "t_contract(ISportsAMM)2677": {
             "label": "contract ISportsAMM",
             "numberOfBytes": "20"
           },
@@ -4211,11 +4221,11 @@
             "label": "mapping(address => address[])",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(CopiedMarketDetails)895_storage)": {
+          "t_mapping(t_address,t_struct(CopiedMarketDetails)1557_storage)": {
             "label": "mapping(address => struct CopyableSportsAMM.CopiedMarketDetails)",
             "numberOfBytes": "32"
           },
-          "t_struct(CopiedMarketDetails)895_storage": {
+          "t_struct(CopiedMarketDetails)1557_storage": {
             "label": "struct CopyableSportsAMM.CopiedMarketDetails",
             "members": [
               {
@@ -4244,6 +4254,516 @@
               }
             ],
             "numberOfBytes": "128"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "daa16cfaf5b5da36e5a33aaab954494ebec4b7ee503d5e600e2da9eeaf03e8d3": {
+      "address": "0x9d014c33dC35246D2112BD7D5bBce9d21772f377",
+      "txHash": "0x76e09a304ed9e608df7e422eb9840601bd3a4999b0cedf906f5725a6499f4f0b",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "copiedParlays",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_struct(CopiedParlayDetails)895_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:31"
+          },
+          {
+            "label": "parlayToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:32"
+          },
+          {
+            "label": "walletToParlays",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:33"
+          },
+          {
+            "label": "parlayMarketsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(IParlayMarketsAMM)2464",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:35"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:38"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(ICurveSUSD)2209",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:41"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:44"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:47"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:50"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "14",
+            "type": "t_bool",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:53"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_uint256",
+            "contract": "CopyableParlayAMM",
+            "src": "contracts/CopyableAMM/CopyableParlayAMM.sol:56"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)2209": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IParlayMarketsAMM)2464": {
+            "label": "contract IParlayMarketsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(CopiedParlayDetails)895_storage)": {
+            "label": "mapping(address => struct CopyableParlayAMM.CopiedParlayDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CopiedParlayDetails)895_storage": {
+            "label": "struct CopyableParlayAMM.CopiedParlayDetails",
+            "members": [
+              {
+                "label": "wasCopied",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "modifiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "3cf82bc3e82168a7da0081473e74bd76ac88f13f2b286fb1ccdf95fb89909ec0": {
+      "address": "0x5D187269bbBaAce98FD1F7fCB87D4A62fF6b39ff",
+      "txHash": "0xcf282f85cfa65c4d603dcac749b514186ccc1da28d7cc774275883fa67ff56ab",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:7"
+          },
+          {
+            "label": "nominatedOwner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:8"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:9"
+          },
+          {
+            "label": "_transferredAtInit",
+            "offset": 21,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "ProxyOwned",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyOwned.sol:10"
+          },
+          {
+            "label": "lastPauseTime",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:11"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool",
+            "contract": "ProxyPausable",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyPausable.sol:12"
+          },
+          {
+            "label": "_guardCounter",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:19"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_bool",
+            "contract": "ProxyReentrancyGuard",
+            "src": "contracts/utils/proxy/solidity-0.8.0/ProxyReentrancyGuard.sol:20"
+          },
+          {
+            "label": "copiedMarkets",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_string_memory_ptr,t_struct(CopiedMarketDetails)1573_storage)",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:30"
+          },
+          {
+            "label": "marketToWallets",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_string_memory_ptr,t_array(t_address)dyn_storage)",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:31"
+          },
+          {
+            "label": "walletToMarkets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_array(t_string_storage)dyn_storage)",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:32"
+          },
+          {
+            "label": "sportsAMM",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(ISportsAMM)2675",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:34"
+          },
+          {
+            "label": "sUSD",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_contract(IERC20Upgradeable)246",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:37"
+          },
+          {
+            "label": "curveSUSD",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_contract(ICurveSUSD)2191",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:40"
+          },
+          {
+            "label": "usdc",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_address",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:43"
+          },
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_address",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:46"
+          },
+          {
+            "label": "dai",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_address",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:49"
+          },
+          {
+            "label": "curveOnrampEnabled",
+            "offset": 20,
+            "slot": "14",
+            "type": "t_bool",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:52"
+          },
+          {
+            "label": "maxAllowedPegSlippagePercentage",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_uint256",
+            "contract": "CopyableSportsAMM",
+            "src": "contracts/CopyableAMM/CopyableSportsAMM.sol:55"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_string_storage)dyn_storage": {
+            "label": "string[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ICurveSUSD)2191": {
+            "label": "contract ICurveSUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)246": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISportsAMM)2675": {
+            "label": "contract ISportsAMM",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_array(t_string_storage)dyn_storage)": {
+            "label": "mapping(address => string[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_array(t_address)dyn_storage)": {
+            "label": "mapping(string => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_struct(CopiedMarketDetails)1573_storage)": {
+            "label": "mapping(string => struct CopyableSportsAMM.CopiedMarketDetails)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(CopiedMarketDetails)1573_storage": {
+            "label": "struct CopyableSportsAMM.CopiedMarketDetails",
+            "members": [
+              {
+                "label": "wasCopied",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "copiedCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "lastCopiedTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
           },
           "t_uint256": {
             "label": "uint256",

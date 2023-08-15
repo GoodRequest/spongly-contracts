@@ -5,7 +5,7 @@ import { GNOSIS_SAFE_WALLET_ADDRESS } from '../utils/constants'
 async function main() {
 	console.log('Transferring ownership of ProxyAdmin...')
 
-	// The owner of the ProxyAdmin can upgrade our contracts
+	// NOTE: after this operation, only the owner of the ProxyAdmin can upgrade our contracts
 	await upgrades.admin.transferProxyAdminOwnership(GNOSIS_SAFE_WALLET_ADDRESS)
 
 	console.log('Transferred ownership of ProxyAdmin to:', GNOSIS_SAFE_WALLET_ADDRESS)

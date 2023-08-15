@@ -1,10 +1,15 @@
 {
     "optimisticGoerli": {
-        "CopyableParlayAMM": "0xDae74BcC47b76585868584718852A7B09c8DB218",
-        "CopyableSportsAMM": "0x3740fF87F772122EE695540f3AF23191bE1A9302"
+        "CopyableParlayAMM": "0xAC15F54F0597fFc26731bDBD5175b8dAe5748834",
+        "CopyableSportsAMM": "0x333D56dB36B82F15E28DC4Be352c4Ed44741975B",
+        "ProxysUSD": "0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198",
+        "ParlayMarketsAMM": "0x0ec9D8Dac2178b041f85f60E3cF13CfaA3d23e0e",
+        "SportMarketsAMM": "0x7465c5d60d3d095443CF9991Da03304A30D42Eae"
     },
     "localhost": {
         "CopyableParlayAMM": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
-        "CopyableSportsAMM": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933"
+        "CopyableSportsAMM": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+        "ProxysUSD": "0x0000000000000000000000000000000000000000",
+        "SportMarketsAMM": "0x0000000000000000000000000000000000000000"
     }
 }
