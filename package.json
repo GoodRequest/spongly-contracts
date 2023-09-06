@@ -1,6 +1,6 @@
 {
 	"name": "spongly-contracts",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "Smart contracts for Spongly dapp",
 	"author": "GoodRequest s.r.o.",
 	"license": "MIT",

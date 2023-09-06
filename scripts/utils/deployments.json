@@ -1,7 +1,12 @@
 {
+    "optimisticMainnet": {
+        "ProxysUSD": "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9",
+        "ParlayMarketsAMM": "0x82B3634C0518507D5d817bE6dAb6233ebE4D68D9",
+        "SportMarketsAMM": "0x170a5714112daEfF20E798B6e92e25B86Ea603C1"
+    },
     "optimisticGoerli": {
-        "CopyableParlayAMM": "0xAC15F54F0597fFc26731bDBD5175b8dAe5748834",
-        "CopyableSportsAMM": "0x333D56dB36B82F15E28DC4Be352c4Ed44741975B",
+        "CopyableParlayAMM": "0x7A5be4Ff6d68fEEB82D1cA72e2A5083e62A8cC43",
+        "CopyableSportsAMM": "0xE3cfdCB451ceC026CE2e9F93bd671801E5BB5FFb",
         "ProxysUSD": "0xE1ceaa829525a08C1d39A5CEBe4b42aF58d77198",
         "ParlayMarketsAMM": "0x0ec9D8Dac2178b041f85f60E3cF13CfaA3d23e0e",
         "SportMarketsAMM": "0x7465c5d60d3d095443CF9991Da03304A30D42Eae"
@@ -10,6 +15,7 @@
         "CopyableParlayAMM": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
         "CopyableSportsAMM": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
         "ProxysUSD": "0x0000000000000000000000000000000000000000",
+        "ParlayMarketsAMM": "0x0000000000000000000000000000000000000000",
         "SportMarketsAMM": "0x0000000000000000000000000000000000000000"
     }
 }

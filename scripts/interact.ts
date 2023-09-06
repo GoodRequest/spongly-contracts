@@ -45,15 +45,24 @@ async function main() {
 	// 	// true // modified
 	// )
 
+	// const transaction = await copyableParlayAMMContract.buyFromAMMWithCopy(
+	// 	'0xF1CC50F300442381651135F8eeAB0702acc43f7D',
+	// 	1, // market's positions
+	// 	12940000000000000000n, // buyIn
+	// 	20000000000000000n, // additionalSlippage
+	// 	9993752342094739907n, // expectedPayout
+	// 	GNOSIS_SAFE_WALLET_ADDRESS, // refferer
+	// 	`${ZERO_ADDRESS} - ${ZERO_ADDRESS}`,
+	// 	// '0x0002288b97af304e29a608fa0e225eb1c8b5a79b', // parlay address
+	// )
 	const transaction = await copyableParlayAMMContract.buyFromAMMWithCopy(
-		'0xF1CC50F300442381651135F8eeAB0702acc43f7D',
-		1, // market's positions
-		12940000000000000000n, // buyIn
-		20000000000000000n, // additionalSlippage
-		9993752342094739907n, // expectedPayout
-		GNOSIS_SAFE_WALLET_ADDRESS, // refferer
-		`${ZERO_ADDRESS} - ${ZERO_ADDRESS}`,
-		// '0x0002288b97af304e29a608fa0e225eb1c8b5a79b', // parlay address
+		"0xc49d1ac9831b272c8700c745179e5b97f4749691",
+		0,
+		9000000000000000000n,
+		20000000000000000n,
+		0x4563918244f40000n,
+		ZERO_ADDRESS,
+		ZERO_ADDRESS,
 	)
 
 	console.log('transaction', transaction.hash)
