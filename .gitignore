@@ -5,9 +5,12 @@ coverage.json
 typechain
 typechain-types
 .yarn-error.log
-yarn.lock
+yarn-error.log
+.DS_Store
 
 # Hardhat files
 cache
 artifacts
 
+# Big files
+/scripts/generateStats/data/**/*
