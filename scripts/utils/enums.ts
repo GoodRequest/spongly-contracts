@@ -1,12 +1,19 @@
 export enum NETWORK {
 	OPTIMISM_MAINNET = 'optimisticMainnet',
-	OPTIMISM_GOERLI = 'optimisticGoerli'
+	OPTIMISM_GOERLI = 'optimisticGoerli',
+	ARBITRUM_MAINNET = 'arbitrumMainnet'
 }
 
 export enum THE_GRAPH_OPERATION_NAME {
 	GET_PARLAY_MARKET = 'getParleyMarket',
 	GET_PARLAY_MARKET_ASCENDING = 'getParleyMarketAscending',
 	GET_SPORT_MARKET = 'getSportMarket'
+}
+
+export enum SUBGRAPH_API_PATH {
+	OPTIMISM_MAINNET = '/sport-markets-optimism',
+	OPTIMISM_GOERLI = '/sport-markets-optimism-goerli',
+	ARBITRUM_MAINNET = '/sport-markets-arbitrum'
 }
 
 export enum MARKET_PROPERTY {

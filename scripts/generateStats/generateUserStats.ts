@@ -8,10 +8,11 @@ import { greenBright, redBright } from 'console-log-colors'
 
 dotenv.config()
 
-import { OP_BASE_URL, OP_GOERLI_BASE_URL } from '../utils/constants'
-import { MARKET_PROPERTY, NETWORK, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
+import { OVERTIME_SUBGRAPH_BASE_URL } from '../utils/constants'
+import { MARKET_PROPERTY, NETWORK, SUBGRAPH_API_PATH, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
 import { getParlayMarketsAscending, getTicketsQuery } from '../utils/queries'
 import { ParlayMarket, Position, PositionBalance } from '../../types/types'
+import { Network } from 'hardhat/types'
 
 const BATCH_SIZE = 1000
 const MAX_ITERATIONS = 6
@@ -21,12 +22,25 @@ const IPFS_TOKEN = Buffer.from(`${process.env.IPFS_USER}:${process.env.IPFS_PASS
 const ipfsClient = create({ url: process.env.IPFS_URL, headers: { authorization: `BASIC ${IPFS_TOKEN}` } })
 
 const theGraphClient = axios.create({
-	baseURL: network.name === NETWORK.OPTIMISM_GOERLI ? OP_GOERLI_BASE_URL : OP_BASE_URL,
+	baseURL: OVERTIME_SUBGRAPH_BASE_URL,
 	headers: {
 		Accept: 'application/json',
 		'Content-Type': 'application/json'
 	}
 })
+
+const getSubgraphApiPath = (network: Network) => {
+	switch (network.name) {
+		case NETWORK.OPTIMISM_MAINNET:
+			return SUBGRAPH_API_PATH.OPTIMISM_MAINNET
+
+		case NETWORK.OPTIMISM_GOERLI:
+			return SUBGRAPH_API_PATH.OPTIMISM_GOERLI
+
+		default:
+			return SUBGRAPH_API_PATH.OPTIMISM_MAINNET
+	}
+}
 
 export const getPositions = (data: ParlayMarket | PositionBalance): Array<Position> => {
 	let positions = [] as Array<Position>
@@ -91,8 +105,8 @@ const fetchAllTickets = async () => {
 		}
 
 		const [batch, parlayMarketsBatch] = await Promise.all([
-			await theGraphClient.post('', graphqlQuery),
-			await theGraphClient.post('', graphqlParlayMarketAscendingQuery)
+			await theGraphClient.post(getSubgraphApiPath(network), graphqlQuery),
+			await theGraphClient.post(getSubgraphApiPath(network), graphqlParlayMarketAscendingQuery)
 		])
 
 		if (batch.data.errors && batch.data.errors.length) {
@@ -125,9 +139,9 @@ const formatStats = (tickets: any[], processStart: string) => {
 	const userSuccessRateMapping = uniqUsers.map((account) => {
 		const userTickets = tickets.filter((ticket) => ticket.account === account)
 		return {
-			account,
-			successRate: getSuccessRateForTickets(userTickets),
-			totalTickets: userTickets.length
+			ac: account,
+			sr: getSuccessRateForTickets(userTickets),
+			tt: userTickets.length
 		}
 	})
 
@@ -168,7 +182,9 @@ async function main() {
 
 		await handleIpfsDeployment(stats)
 
-		await writeStatsToFile(stats, processStart)
+		if (process.env.GENERATE_FILE) {
+			await writeStatsToFile(stats, processStart)
+		}
 
 		console.log(greenBright('Stats generated successfully!'))
 	} catch (error) {

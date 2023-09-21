@@ -21,8 +21,7 @@
 		"lint-fix": "yarn solhint --fix contracts/**/*.sol",
 		"gas-report": "yarn hardhat --network localhost gas-report",
 		"interact": "yarn hardhat run ./scripts/interact.ts --network optimisticGoerli",
-		"op:generate-stats": "yarn hardhat --network optimisticEthereum run ./scripts/generateStats/generateUserStats.ts",
-		"op-goerli:generate-stats": "yarn hardhat --network optimisticGoerli run ./scripts/generateStats/generateUserStats.ts"
+		"op:generate-stats": "yarn hardhat --network optimisticEthereum run ./scripts/generateStats/generateUserStats.ts"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-chai-matchers": "1.0.0",
