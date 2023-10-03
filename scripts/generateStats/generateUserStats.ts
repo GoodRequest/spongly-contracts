@@ -9,7 +9,7 @@ import { greenBright, redBright } from 'console-log-colors'
 dotenv.config()
 
 import { OVERTIME_SUBGRAPH_BASE_URL } from '../utils/constants'
-import { MARKET_PROPERTY, NETWORK, SUBGRAPH_API_PATH, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
+import { MARKET_PROPERTY, NETWORK, ORDER_DIRECTION, SUBGRAPH_API_PATH, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
 import { getParlayMarketsAscending, getTicketsQuery } from '../utils/queries'
 import { ParlayMarket, Position, PositionBalance } from '../../types/types'
 import { Network } from 'hardhat/types'
@@ -99,25 +99,25 @@ const fetchAllTickets = async () => {
 			variables: {
 				firstParlay: BATCH_SIZE,
 				skipParlay: skip,
-				orderDirection: 'asc'
+				orderDirection: ORDER_DIRECTION.ASC
 			},
 			query: getParlayMarketsAscending
 		}
 
-		const [batch, parlayMarketsBatch] = await Promise.all([
+		const [mixedBatch, parlayMarketsAscendingBatch] = await Promise.all([
 			await theGraphClient.post(getSubgraphApiPath(network), graphqlQuery),
 			await theGraphClient.post(getSubgraphApiPath(network), graphqlParlayMarketAscendingQuery)
 		])
 
-		if (batch.data.errors && batch.data.errors.length) {
-			throw new Error(`Error: ${batch.data.errors.join('; ')}`)
+		if (mixedBatch.data.errors && mixedBatch.data.errors.length) {
+			throw new Error(mixedBatch.data.errors.join('; '))
 		}
 
-		if (parlayMarketsBatch.data.errors && parlayMarketsBatch.data.errors.length) {
-			throw new Error(`Error: ${parlayMarketsBatch.data.errors.join('; ')}`)
+		if (parlayMarketsAscendingBatch.data.errors && parlayMarketsAscendingBatch.data.errors.length) {
+			throw new Error(parlayMarketsAscendingBatch.data.errors.join('; '))
 		}
 
-		const manchesterUnited = [...batch.data.data.parlayMarkets, ...batch.data.data.positionBalances, ...parlayMarketsBatch.data.data.parlayMarkets]
+		const manchesterUnited = [...mixedBatch.data.data.parlayMarkets, ...mixedBatch.data.data.positionBalances, ...parlayMarketsAscendingBatch.data.data.parlayMarkets]
 
 		tickets.push(manchesterUnited)
 	}
@@ -127,16 +127,15 @@ const fetchAllTickets = async () => {
 
 const writeStatsToFile = async (stats: Record<string, any>, processStart: string) => {
 	const fileName = `stats-${network.name}-${processStart}.json`
-	const statsFile = await fs.open(path.join(process.cwd(), 'scripts', 'generateStats', 'data', fileName), 'w')
+	const destinationFilePath = path.join(process.cwd(), 'scripts', 'generateStats', 'data', fileName)
 
-	await statsFile.writeFile(JSON.stringify(stats))
-	await statsFile.close()
+	await fs.writeFile(destinationFilePath, JSON.stringify(stats))
 }
 
 const formatStats = (tickets: any[], processStart: string) => {
 	const uniqUsers = [...new Set(tickets.map((ticket) => ticket.account))]
 
-	const userSuccessRateMapping = uniqUsers.map((account) => {
+	const stats = uniqUsers.map((account) => {
 		const userTickets = tickets.filter((ticket) => ticket.account === account)
 		return {
 			ac: account,
@@ -152,7 +151,7 @@ const formatStats = (tickets: any[], processStart: string) => {
 			ticketsCount: tickets.length,
 			uniqueUsersCount: uniqUsers.length
 		},
-		stats: userSuccessRateMapping
+		stats
 	}
 }
 
@@ -187,6 +186,7 @@ async function main() {
 		}
 
 		console.log(greenBright('Stats generated successfully!'))
+		process.exit(0)
 	} catch (error) {
 		console.error(redBright(error))
 		process.exit(1)

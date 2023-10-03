@@ -4,6 +4,11 @@ export enum NETWORK {
 	ARBITRUM_MAINNET = 'arbitrumMainnet'
 }
 
+export enum ORDER_DIRECTION {
+	ASC = 'asc',
+	DESC = 'desc'
+}
+
 export enum THE_GRAPH_OPERATION_NAME {
 	GET_PARLAY_MARKET = 'getParleyMarket',
 	GET_PARLAY_MARKET_ASCENDING = 'getParleyMarketAscending',

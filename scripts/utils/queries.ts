@@ -9,8 +9,6 @@ export const getParlayMarketsAscending = /* GraphQL */ `
 			won
 			account
 			totalAmount
-			lastGameStarts
-			marketQuotes
 			positions(first: 10, skip: 0) {
 				claimable
 				id
@@ -18,13 +16,6 @@ export const getParlayMarketsAscending = /* GraphQL */ `
 				market {
 					id
 					address
-					doubleChanceMarketType
-					homeTeam
-					homeScore
-					homeOdds
-					awayOdds
-					awayScore
-					awayTeam
 					betType
 					finalResult
 					isCanceled
@@ -35,9 +26,6 @@ export const getParlayMarketsAscending = /* GraphQL */ `
 					tags
 					gameId
 				}
-			}
-			sportMarkets {
-				gameId
 			}
 		}
 	}
@@ -50,12 +38,8 @@ export const getTicketsQuery = /* GraphQL */ `
 			claimed
 			sUSDPaid
 			timestamp
-			totalQuote
 			won
 			account
-			totalAmount
-			lastGameStarts
-			marketQuotes
 			positions(first: 10, skip: 0) {
 				claimable
 				id
@@ -63,26 +47,13 @@ export const getTicketsQuery = /* GraphQL */ `
 				market {
 					id
 					address
-					doubleChanceMarketType
-					homeTeam
-					homeScore
-					homeOdds
-					awayOdds
-					awayScore
-					awayTeam
 					betType
 					finalResult
 					isCanceled
 					isOpen
 					isPaused
 					isResolved
-					maturityDate
-					tags
-					gameId
 				}
-			}
-			sportMarkets {
-				gameId
 			}
 		}
 		positionBalances(first: $firstSingle, skip: $skipSingle) {
@@ -96,18 +67,8 @@ export const getTicketsQuery = /* GraphQL */ `
 				claimable
 				market {
 					address
-					awayOdds
-					awayScore
-					awayTeam
 					betType
-					downAddress
-					drawAddress
-					drawOdds
-					doubleChanceMarketType
 					finalResult
-					homeOdds
-					homeScore
-					homeTeam
 					id
 					isCanceled
 					isOpen
@@ -116,9 +77,7 @@ export const getTicketsQuery = /* GraphQL */ `
 					total
 					timestamp
 					resultDetails
-					tags
 					maturityDate
-					gameId
 				}
 			}
 		}
