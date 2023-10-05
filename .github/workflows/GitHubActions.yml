@@ -41,4 +41,4 @@ jobs:
 
       - name: Generate and publish stats
         run: |
-          CI=false npm run op:generate-stats
+          CI=false yarn run op:generate-stats
