@@ -6,6 +6,13 @@ on:
 env:
   NODE_ENV: ${{ secrets.NODE_ENV }}
 
+  WALLET_PRIVATE_KEY_DEV1: ${{ secrets.WALLET_PRIVATE_KEY_DEV1 }}
+  WALLET_PUBLIC_KEY_DEV1: ${{ secrets.WALLET_PUBLIC_KEY_DEV1 }}
+  INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+  ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+  OP_ETHERSCAN_API_KEY: ${{ secrets.OP_ETHERSCAN_API_KEY }}
+  POLYGONSCAN_API_KEY: ${{ secrets.POLYGONSCAN_API_KEY }}
+
   IPFS_URL: ${{ secrets.IPFS_URL }}
   IPFS_USER: ${{ secrets.IPFS_USER }}
   IPFS_PASS: ${{ secrets.IPFS_PASS }}
@@ -30,7 +37,7 @@ jobs:
 
       - name: Install node_modules
         run: |
-          npm install
+          yarn install
 
       - name: Generate and publish stats
         run: |
