@@ -32,6 +32,6 @@ jobs:
         run: |
           npm install
 
-      - name: Build Next.js for IPFS
+      - name: Generate and publish stats
         run: |
           CI=false npm run op:generate-stats
