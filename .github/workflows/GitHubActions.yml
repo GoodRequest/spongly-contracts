@@ -1,0 +1,37 @@
+name: GitHub Actions
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_ENV: ${{ secrets.NODE_ENV }}
+
+  IPFS_URL: ${{ secrets.IPFS_URL }}
+  IPFS_USER: ${{ secrets.IPFS_USER }}
+  IPFS_PASS: ${{ secrets.IPFS_PASS }}
+  IPNS_KEY: ${{ secrets.IPNS_KEY }}
+
+jobs:
+  Build-and-Publish:
+    if: |
+      ${{ github.event_name == 'workflow_dispatch' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.14.0'
+          cache: 'npm'
+
+      - name: Install node_modules
+        run: |
+          npm install
+
+      - name: Build Next.js for IPFS
+        run: |
+          CI=false npm run op:generate-stats
