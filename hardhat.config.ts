@@ -1,10 +1,10 @@
 import { HardhatUserConfig } from 'hardhat/config'
-import '@nomiclabs/hardhat-etherscan'
+/* import '@nomiclabs/hardhat-etherscan'
 import '@nomiclabs/hardhat-ethers'
 import '@nomicfoundation/hardhat-toolbox'
 import '@nomiclabs/hardhat-solhint'
 import '@openzeppelin/hardhat-upgrades'
-import 'hardhat-abi-exporter'
+import 'hardhat-abi-exporter' */
 import * as dotenv from 'dotenv'
 
 dotenv.config()
