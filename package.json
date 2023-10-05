@@ -23,7 +23,7 @@
 		"interact": "yarn hardhat run ./scripts/interact.ts --network optimisticGoerli",
 		"op:generate-stats": "yarn hardhat --network optimisticEthereum run ./scripts/generateStats/generateUserStats.ts"
 	},
-	"devDependencies": {
+	"dependencies": {
 		"@nomicfoundation/hardhat-chai-matchers": "1.0.0",
 		"@nomicfoundation/hardhat-network-helpers": "1.0.0",
 		"@nomiclabs/hardhat-ethers": "2.2.3",
@@ -48,9 +48,7 @@
 		"solidity-coverage": "0.8.1",
 		"ts-node": "10.9.1",
 		"typechain": "8.1.0",
-		"typescript": "5.0.4"
-	},
-	"dependencies": {
+		"typescript": "5.0.4",
 		"@nomicfoundation/hardhat-toolbox": "2.0.2",
 		"@openzeppelin/contracts-upgradeable": "4.8.3",
 		"dotenv": "16.0.3"
