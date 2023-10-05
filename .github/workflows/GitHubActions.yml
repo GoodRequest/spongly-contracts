@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.14.0'
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install node_modules
         run: |
