@@ -16,4 +16,8 @@ describe('CopyableParlayAMM', () => {
 	it('Should be deployed', async () => {
 		expect(contract.address).to.be.properAddress
 	})
+
+	it('Should be deployed', async () => {
+		expect(contract.address).to.be.properAddress
+	})
 })

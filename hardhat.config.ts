@@ -11,6 +11,7 @@ import '@nomiclabs/hardhat-solhint'
 import '@openzeppelin/hardhat-upgrades'
 
 import 'hardhat-abi-exporter'
+import 'hardhat-gas-reporter'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -99,9 +100,9 @@ const config: HardhatUserConfig = {
 		}
 	},
 	gasReporter: {
-		enabled: process.env.REPORT_GAS ? true : false,
+		enabled:  true,
 		outputFile: 'gas-report.txt',
-		noColors: true
+		currency: 'USD'
 	},
 	abiExporter: {
 		path: './scripts/abi',
