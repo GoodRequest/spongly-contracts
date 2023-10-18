@@ -13,10 +13,9 @@ const SUSD_ADDRESS = getDeploymentAddress('ProxysUSD', network.name)
 
 const maxAllowedPegSlippagePercentage = BigInt(2e16) // 0.02 ETH
 
-export async function main(): Promise<Contract> {
+export async function deploy(): Promise<Contract> {
 	// Obtain reference to contract and ABI.
 	const CopyableParlayAMM = await ethers.getContractFactory(contractName)
-	console.log(`Deploying ${contractName} to`, network.name)
 
 	// Validate if required properties are set
 	if (!PARLAY_MARKETS_AMM_ADDRESS || !SUSD_ADDRESS) {
@@ -41,7 +40,6 @@ export async function main(): Promise<Contract> {
 
 
 	await copyableParlayAMM.deployed()
-	console.log(`${contractName} deployed to:`, copyableParlayAMM.address)
 
 	// store the contract address in the deployment addresses json
 	setDeploymentAddress(contractName, copyableParlayAMM.address, network.name)
@@ -49,7 +47,7 @@ export async function main(): Promise<Contract> {
 	return copyableParlayAMM
 }
 
-main()
+deploy()
 	.then(() => process.exit(0))
 	.catch((error) => {
 		console.error(error)

@@ -3,6 +3,7 @@
 import { ethers, network, upgrades } from 'hardhat'
 
 import { getDeploymentAddress, setDeploymentAddress } from '../utils/helpers'
+import {Contract} from "ethers";
 
 const contractName = 'CopyableSportsAMM'
 
@@ -12,10 +13,9 @@ const SUSD_ADDRESS = getDeploymentAddress('ProxysUSD', network.name)
 
 const maxAllowedPegSlippagePercentage = BigInt(2e16) // 0.02 ETH
 
-async function main() {
+export async function deploy(): Promise<Contract> {
 	// Obtain reference to contract and ABI.
 	const CopyableSportsAMM = await ethers.getContractFactory(contractName)
-	console.log(`Deploying ${contractName} to`, network.name)
 
 	// Validate if required properties are set
 	if (!SPORT_MARKETS_AMM_ADDRESS || !SUSD_ADDRESS) {
@@ -41,13 +41,12 @@ async function main() {
 
 	await copyableSportsAMM.deployed()
 
-	console.log(`${contractName} deployed to:`, copyableSportsAMM.address)
-
 	// store the contract address in the deployment addresses json
 	setDeploymentAddress(contractName, copyableSportsAMM.address, network.name)
+	return copyableSportsAMM
 }
 
-main()
+deploy()
 	.then(() => process.exit(0))
 	.catch((error) => {
 		console.error(error)

@@ -1,5 +1,5 @@
 import { ethers, network, upgrades } from 'hardhat'
-import { main as deployCopyableParlayAMM } from "../../scripts/deployCopyableParlayAMM/deploy_upgradable_copyableParlayAMM";
+import { deploy as deployCopyableParlayAMM } from "../../scripts/deployCopyableParlayAMM/deploy_upgradable_copyableParlayAMM";
 import {Contract} from "ethers";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {expect} from "chai";

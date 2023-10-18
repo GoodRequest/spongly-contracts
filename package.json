@@ -13,15 +13,15 @@
 		"url": "https://github.com/GoodRequest/spongly-contracts"
 	},
 	"scripts": {
-		"compile": "yarn hardhat compile",
-		"export-abi": "yarn hardhat export-abi --no-compile",
-		"test": "yarn hardhat test",
-		"coverage": "yarn hardhat coverage",
-		"lint": "yarn solhint contracts/**/*.sol",
-		"lint-fix": "yarn solhint --fix contracts/**/*.sol",
-		"gas-report": "yarn hardhat --network localhost gas-report",
-		"interact": "yarn hardhat run ./scripts/interact.ts --network optimisticGoerli",
-		"op:generate-stats": "yarn hardhat --network optimisticEthereum run ./scripts/generateStats/generateUserStats.ts"
+		"compile": "npx hardhat compile",
+		"export-abi": "npx hardhat export-abi --no-compile",
+		"test": "npx hardhat test --network hardhat",
+		"coverage": "npx hardhat coverage",
+		"lint": "npx solhint contracts/**/*.sol",
+		"lint-fix": "npx solhint --fix contracts/**/*.sol",
+		"gas-report": "npx hardhat --network localhost gas-report",
+		"interact": "npx hardhat run ./scripts/interact.ts --network optimisticGoerli",
+		"op:generate-stats": "npx hardhat --network optimisticEthereum run ./scripts/generateStats/generateUserStats.ts"
 	},
 	"dependencies": {
 		"@nomicfoundation/hardhat-chai-matchers": "1.0.0",

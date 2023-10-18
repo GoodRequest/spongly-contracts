@@ -13,8 +13,8 @@ yarn install
 ```bash
 test
 yarn hardhat test --optimizer
-yarn hardhat test test/contracts/CopyableParlayAMM.ts --optimizer
-yarn hardhat test test/contracts/CopyableSportsAMM.ts --optimizer
+yarn hardhat test test/contracts/CopyableParlayAMM.test.ts --optimizer
+yarn hardhat test test/contracts/CopyableSportsAMM.test.ts --optimizer
 
 yarn hardhat coverage
 
