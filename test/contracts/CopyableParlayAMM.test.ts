@@ -1,4 +1,4 @@
-import { ethers, network, upgrades } from 'hardhat'
+import { ethers } from 'hardhat'
 import { deploy as deployCopyableParlayAMM } from "../../scripts/deployCopyableParlayAMM/deploy_upgradable_copyableParlayAMM";
 import {Contract} from "ethers";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
@@ -13,7 +13,7 @@ describe('CopyableParlayAMM', () => {
 		contract = await deployCopyableParlayAMM()
 	})
 
-	it('Should be deployed', async function () {
+	it('Should be deployed', async () => {
 		expect(contract.address).to.be.properAddress
 	})
 })
