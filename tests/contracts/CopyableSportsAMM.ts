@@ -5,11 +5,9 @@ import {expect} from "chai";
 import {Contract} from "ethers";
 
 
-describe('CopyableSportsAMM', () => {
+describe('CopyableSportsAMM', async () => {
     let contract: Contract
-    let owner: SignerWithAddress, acc1: SignerWithAddress
-    before('before', async () => {
-        [owner, acc1] = await ethers.getSigners()
+    before(async () => {
         contract = await deployCopyableSportsAMM()
     })
 

@@ -5,16 +5,10 @@ import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {expect} from "chai";
 
 
-describe('CopyableParlayAMM', () => {
+describe('CopyableParlayAMM', async () => {
 	let contract: Contract
-	let owner: SignerWithAddress, acc1: SignerWithAddress
-	before('before', async () => {
-		[owner, acc1] = await ethers.getSigners()
+	before(async () => {
 		contract = await deployCopyableParlayAMM()
-	})
-
-	it('Should be deployed', async () => {
-		expect(contract.address).to.be.properAddress
 	})
 
 	it('Should be deployed', async () => {

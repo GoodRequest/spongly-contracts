@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
 	},
 	paths: {
 		sources: './contracts',
-		tests: './test/contracts'
+		tests: './tests/contracts'
 	},
 	defaultNetwork: 'hardhat',
 	networks: {
@@ -45,7 +45,8 @@ const config: HardhatUserConfig = {
 			chainId: 31337,
 			forking: {
 				enabled: true,
-				url: 'https://opt-mainnet.g.alchemy.com/v2/' + OP_MAINNET_KEY
+				url: 'https://opt-mainnet.g.alchemy.com/v2/' + OP_MAINNET_KEY,
+				blockNumber: 31337
 			}
 		},
 		goerli: {
