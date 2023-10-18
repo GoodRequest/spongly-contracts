@@ -1,10 +1,16 @@
 import { HardhatUserConfig } from 'hardhat/config'
-/* import '@nomiclabs/hardhat-etherscan'
-import '@nomiclabs/hardhat-ethers'
+
+import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-toolbox'
+import '@nomicfoundation/hardhat-network-helpers'
+
+import '@nomiclabs/hardhat-etherscan'
+import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-solhint'
+
 import '@openzeppelin/hardhat-upgrades'
-import 'hardhat-abi-exporter' */
+
+import 'hardhat-abi-exporter'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -33,8 +39,13 @@ const config: HardhatUserConfig = {
 	},
 	defaultNetwork: 'hardhat',
 	networks: {
-		localhost: {
-			chainId: 31337
+		// Default network is a fork of Optimism mainnet
+		hardhat: {
+			chainId: 31337,
+			forking: {
+				enabled: true,
+				url: 'https://opt-mainnet.g.alchemy.com/v2/BAVQxp_STvJV9tW1DCA3-6U2U_2QA4xO'
+			}
 		},
 		goerli: {
 			url: 'https://goerli.infura.io/v3/' + INFURA_API_KEY,
@@ -108,7 +119,7 @@ const config: HardhatUserConfig = {
 					apiURL: 'https://api-goerli-optimism.etherscan.io/api',
 					browserURL: 'https://goerli-optimism.etherscan.io/'
 				}
-			}
+			},
 		],
 		apiKey: {
 			mainnet: ETHERSCAN_KEY,

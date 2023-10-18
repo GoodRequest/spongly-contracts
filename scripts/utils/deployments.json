@@ -1,4 +1,10 @@
 {
+    "hardhat": {
+        "ProxysUSD": "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9",
+        "ParlayMarketsAMM": "0x82B3634C0518507D5d817bE6dAb6233ebE4D68D9",
+        "SportMarketsAMM": "0x170a5714112daEfF20E798B6e92e25B86Ea603C1",
+        "CopyableParlayAMM": "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe"
+    },
     "optimisticMainnet": {
         "ProxysUSD": "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9",
         "ParlayMarketsAMM": "0x82B3634C0518507D5d817bE6dAb6233ebE4D68D9",

@@ -3,6 +3,7 @@
 import { ethers, network, upgrades } from 'hardhat'
 
 import { getDeploymentAddress, setDeploymentAddress } from '../utils/helpers'
+import {Contract} from "ethers";
 
 const contractName = 'CopyableParlayAMM'
 
@@ -12,7 +13,7 @@ const SUSD_ADDRESS = getDeploymentAddress('ProxysUSD', network.name)
 
 const maxAllowedPegSlippagePercentage = BigInt(2e16) // 0.02 ETH
 
-async function main() {
+export async function main(): Promise<Contract> {
 	// Obtain reference to contract and ABI.
 	const CopyableParlayAMM = await ethers.getContractFactory(contractName)
 	console.log(`Deploying ${contractName} to`, network.name)
@@ -21,7 +22,6 @@ async function main() {
 	if (!PARLAY_MARKETS_AMM_ADDRESS || !SUSD_ADDRESS) {
 		throw new Error('Missing required parameter for deployment')
 	}
-
 	// Get the first account from the list of 20 created for you by Hardhat
 	const [owner] = await ethers.getSigners()
 
@@ -39,12 +39,14 @@ async function main() {
 		{ initializer: 'initialize' }
 	)
 
-	await copyableParlayAMM.deployed()
 
+	await copyableParlayAMM.deployed()
 	console.log(`${contractName} deployed to:`, copyableParlayAMM.address)
 
 	// store the contract address in the deployment addresses json
 	setDeploymentAddress(contractName, copyableParlayAMM.address, network.name)
+
+	return copyableParlayAMM
 }
 
 main()
