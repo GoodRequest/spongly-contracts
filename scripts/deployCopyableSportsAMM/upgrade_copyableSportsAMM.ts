@@ -4,7 +4,7 @@ import { getDeploymentAddress } from '../utils/helpers'
 
 const contractName = 'CopyableSportsAMM'
 
-async function main() {
+async function upgrade() {
 	const deployedProxyAddress = getDeploymentAddress(contractName, network.name)
 
 	const CopyableSportsAMM = await ethers.getContractFactory(contractName)
@@ -14,7 +14,7 @@ async function main() {
 	console.log(`${contractName} upgraded`)
 }
 
-main()
+upgrade()
 	.then(() => process.exit(0))
 	.catch((error) => {
 		console.error(error)
