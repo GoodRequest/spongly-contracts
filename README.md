@@ -18,9 +18,9 @@ yarn hardhat tests tests/contracts/CopyableSportsAMM.ts --optimizer
 
 yarn hardhat coverage
 
-deploy on OP Mainnet
-yarn hardhat run --network optimisticEthereum scripts/deployCopyableParlayAMM/deploy_upgradable_copyableParlayAMM.ts
-yarn hardhat run --network optimisticEthereum scripts/deployCopyableSportsAMM/deploy_upgradeable_copyableSportsAMM.ts
+deploys on OP Mainnet
+yarn hardhat run --network optimisticEthereum scripts/deployCopyableParlayAMM/copyableParlayAMM.ts
+yarn hardhat run --network optimisticEthereum scripts/deployCopyableSportsAMM/copyableSportsAMM.ts
 
 generate aggregations for OP Mainnet
 yarn op:generate-stats

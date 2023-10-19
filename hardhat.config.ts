@@ -12,6 +12,7 @@ import '@openzeppelin/hardhat-upgrades'
 
 import 'hardhat-abi-exporter'
 import 'hardhat-gas-reporter'
+import 'hardhat-deploy'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -37,6 +38,13 @@ const config: HardhatUserConfig = {
 	paths: {
 		sources: './contracts',
 		tests: './tests/contracts'
+	},
+	namedAccounts: {
+		// We can set deployer address in .env, otherwise 0 address wil be used
+		deployer: process.env.DEPLOYER ?? 0,
+		acc1: 1,
+		acc2: 2,
+		acc3: 3
 	},
 	defaultNetwork: 'hardhat',
 	networks: {
