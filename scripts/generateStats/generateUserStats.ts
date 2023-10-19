@@ -117,7 +117,11 @@ const fetchAllTickets = async () => {
 			throw new Error(parlayMarketsAscendingBatch.data.errors.join('; '))
 		}
 
-		const manchesterUnited = [...mixedBatch.data.data.parlayMarkets, ...mixedBatch.data.data.positionBalances, ...parlayMarketsAscendingBatch.data.data.parlayMarkets]
+		const manchesterUnited = [
+			...mixedBatch.data.data.parlayMarkets,
+			...mixedBatch.data.data.positionBalances,
+			...parlayMarketsAscendingBatch.data.data.parlayMarkets
+		]
 
 		tickets.push(manchesterUnited)
 	}

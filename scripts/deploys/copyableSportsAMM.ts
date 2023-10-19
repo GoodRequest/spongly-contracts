@@ -1,9 +1,9 @@
 // The Open Zeppelin upgrades plugin adds the `upgrades` property
 // to the Hardhat Runtime Environment.
-import {ethers, getNamedAccounts, network, upgrades} from 'hardhat'
+import { ethers, getNamedAccounts, network, upgrades } from 'hardhat'
 
 import { getDeploymentAddress, setDeploymentAddress } from '../utils/helpers'
-import {Contract} from "ethers";
+import { Contract } from 'ethers'
 
 const contractName = 'CopyableSportsAMM'
 

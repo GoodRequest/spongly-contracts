@@ -1,9 +1,8 @@
-import {ethers} from 'hardhat'
-import { deploy as deployCopyableParlayAMM } from "../../scripts/deploys/copyableParlayAMM";
-import {Contract} from "ethers";
-import {expect} from "chai";
-import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
-
+import { ethers } from 'hardhat'
+import { deploy as deployCopyableParlayAMM } from '../../scripts/deploys/copyableParlayAMM'
+import { Contract } from 'ethers'
+import { expect } from 'chai'
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 
 describe('CopyableParlayAMM', async () => {
 	let contract: Contract

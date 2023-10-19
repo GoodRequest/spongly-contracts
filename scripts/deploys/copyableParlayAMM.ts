@@ -1,9 +1,9 @@
 // The Open Zeppelin upgrades plugin adds the `upgrades` property
 // to the Hardhat Runtime Environment.
-import {ethers, getNamedAccounts, network, upgrades} from 'hardhat'
+import { ethers, getNamedAccounts, network, upgrades } from 'hardhat'
 
 import { getDeploymentAddress, setDeploymentAddress } from '../utils/helpers'
-import {Contract} from "ethers";
+import { Contract } from 'ethers'
 
 const contractName = 'CopyableParlayAMM'
 
@@ -14,7 +14,7 @@ const maxAllowedPegSlippagePercentage = BigInt(2e16) // 0.02 ETH
 
 export async function deploy(): Promise<Contract> {
 	// Obtain reference to contract and ABI.
-	const Box =  await ethers.getContractFactory(contractName)
+	const Box = await ethers.getContractFactory(contractName)
 
 	// Validate if required properties are set
 	if (!PARLAY_MARKETS_AMM_ADDRESS || !SUSD_ADDRESS) {
