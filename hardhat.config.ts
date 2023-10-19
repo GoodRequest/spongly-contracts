@@ -1,7 +1,5 @@
 /**
  * Todo: check if packages were correctly split on dev and prod dependencies
- * Todo: fix coverage tests
- * Todo: fix has-report
  * Todo: write tests
  * */
 
@@ -116,9 +114,11 @@ const config: HardhatUserConfig = {
 		}
 	},
 	gasReporter: {
-		enabled:  true,
+		enabled: (process.env.REPORT_GAS) ? true : false,
 		outputFile: 'gas-report.txt',
-		currency: 'USD'
+		currency: 'USD',
+		noColors: true,
+		gasPriceApi: 'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
 	},
 	abiExporter: {
 		path: './scripts/abi',

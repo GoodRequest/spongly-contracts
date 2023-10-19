@@ -14,3 +14,9 @@ artifacts
 
 # Big files
 /scripts/generateStats/data/**/*
+/.idea/.gitignore
+/.idea/aws.xml
+/gas-report.txt
+/.idea/modules.xml
+/.idea/spongly-contracts.iml
+/.idea/vcs.xml

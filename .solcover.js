@@ -21,5 +21,5 @@ module.exports = {
                 "]" +
                 "jml[jl] VcTOcl jml",
         },
-    },
+    }
 }
