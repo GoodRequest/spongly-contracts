@@ -1,3 +1,10 @@
+/**
+ * Todo: check if packages were correctly split on dev and prod dependencies
+ * Todo: fix coverage tests
+ * Todo: fix has-report
+ * Todo: write tests
+ * */
+
 import { HardhatUserConfig } from 'hardhat/config'
 
 import '@nomicfoundation/hardhat-chai-matchers'
