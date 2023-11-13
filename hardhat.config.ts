@@ -56,6 +56,7 @@ const config: HardhatUserConfig = {
 		// Default network is a fork of Optimism mainnet
 		hardhat: {
 			chainId: 31337,
+			// minGasPrice: 123,
 			forking: {
 				enabled: true,
 				url: 'https://opt-mainnet.g.alchemy.com/v2/' + OP_MAINNET_KEY,
@@ -114,7 +115,7 @@ const config: HardhatUserConfig = {
 		}
 	},
 	gasReporter: {
-		enabled: (process.env.REPORT_GAS) ? true : false,
+		enabled: process.env.REPORT_GAS ? true : false,
 		outputFile: 'gas-report.txt',
 		currency: 'USD',
 		noColors: true,
@@ -136,7 +137,7 @@ const config: HardhatUserConfig = {
 					apiURL: 'https://api-goerli-optimism.etherscan.io/api',
 					browserURL: 'https://goerli-optimism.etherscan.io/'
 				}
-			},
+			}
 		],
 		apiKey: {
 			mainnet: ETHERSCAN_KEY,
