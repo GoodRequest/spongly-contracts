@@ -56,13 +56,13 @@ async function main() {
 	// 	// '0x0002288b97af304e29a608fa0e225eb1c8b5a79b', // parlay address
 	// )
 	const transaction = await copyableParlayAMMContract.buyFromAMMWithCopy(
-		"0xc49d1ac9831b272c8700c745179e5b97f4749691",
+		'0xc49d1ac9831b272c8700c745179e5b97f4749691',
 		0,
 		9000000000000000000n,
 		20000000000000000n,
 		0x4563918244f40000n,
 		ZERO_ADDRESS,
-		ZERO_ADDRESS,
+		ZERO_ADDRESS
 	)
 
 	console.log('transaction', transaction.hash)

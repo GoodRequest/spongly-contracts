@@ -1,10 +1,23 @@
+/**
+ * Todo: check if packages were correctly split on dev and prod dependencies
+ * Todo: write tests
+ * */
+
 import { HardhatUserConfig } from 'hardhat/config'
-/* import '@nomiclabs/hardhat-etherscan'
-import '@nomiclabs/hardhat-ethers'
+
+import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-toolbox'
+import '@nomicfoundation/hardhat-network-helpers'
+
+import '@nomiclabs/hardhat-etherscan'
+import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-solhint'
+
 import '@openzeppelin/hardhat-upgrades'
-import 'hardhat-abi-exporter' */
+
+import 'hardhat-abi-exporter'
+import 'hardhat-gas-reporter'
+import 'hardhat-deploy'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -15,7 +28,7 @@ const INFURA_API_KEY = process.env.INFURA_API_KEY!
 const ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY!
 const OP_ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY!
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY!
-
+const OP_MAINNET_KEY = process.env.OP_MAINNET_KEY!
 const config: HardhatUserConfig = {
 	solidity: {
 		version: '0.8.17',
@@ -29,12 +42,26 @@ const config: HardhatUserConfig = {
 	},
 	paths: {
 		sources: './contracts',
-		tests: './test/contracts'
+		tests: './tests/contracts'
+	},
+	namedAccounts: {
+		// We can set deployer address in .env, otherwise 0 address wil be used
+		deployer: process.env.DEPLOYER ?? 0,
+		acc1: 1,
+		acc2: 2,
+		acc3: 3
 	},
 	defaultNetwork: 'hardhat',
 	networks: {
-		localhost: {
-			chainId: 31337
+		// Default network is a fork of Optimism mainnet
+		hardhat: {
+			chainId: 31337,
+			// minGasPrice: 123,
+			forking: {
+				enabled: true,
+				url: 'https://opt-mainnet.g.alchemy.com/v2/' + OP_MAINNET_KEY,
+				blockNumber: 31337
+			}
 		},
 		goerli: {
 			url: 'https://goerli.infura.io/v3/' + INFURA_API_KEY,
@@ -90,7 +117,9 @@ const config: HardhatUserConfig = {
 	gasReporter: {
 		enabled: process.env.REPORT_GAS ? true : false,
 		outputFile: 'gas-report.txt',
-		noColors: true
+		currency: 'USD',
+		noColors: true,
+		gasPriceApi: 'https://api.etherscan.io/api?module=proxy&action=eth_gasPrice'
 	},
 	abiExporter: {
 		path: './scripts/abi',

@@ -2,19 +2,19 @@ import { ethers, upgrades, network } from 'hardhat'
 
 import { getDeploymentAddress } from '../utils/helpers'
 
-const contractName = 'CopyableSportsAMM'
+const contractName = 'CopyableParlayAMM'
 
-async function main() {
+async function upgrade() {
 	const deployedProxyAddress = getDeploymentAddress(contractName, network.name)
 
-	const CopyableSportsAMM = await ethers.getContractFactory(contractName)
+	const CopyableParlayAMM = await ethers.getContractFactory(contractName)
 	console.log(`Upgrading ${contractName}...`)
 
-	await upgrades.upgradeProxy(deployedProxyAddress, CopyableSportsAMM)
+	await upgrades.upgradeProxy(deployedProxyAddress, CopyableParlayAMM)
 	console.log(`${contractName} upgraded`)
 }
 
-main()
+upgrade()
 	.then(() => process.exit(0))
 	.catch((error) => {
 		console.error(error)
