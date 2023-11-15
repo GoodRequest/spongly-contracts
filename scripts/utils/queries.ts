@@ -1,39 +1,12 @@
-export const getParlayMarketsAscending = /* GraphQL */ `
-	query getParleyMarket($skipParlay: Int!, $firstParlay: Int!, $orderDirection: String!) {
-		parlayMarkets(first: $firstParlay, skip: $skipParlay, orderBy: timestamp, orderDirection: $orderDirection) {
-			id
-			claimed
-			sUSDPaid
-			timestamp
-			totalQuote
-			won
-			account
-			totalAmount
-			positions(first: 10, skip: 0) {
-				claimable
-				id
-				side
-				market {
-					id
-					address
-					betType
-					finalResult
-					isCanceled
-					isOpen
-					isPaused
-					isResolved
-					maturityDate
-					tags
-					gameId
-				}
-			}
-		}
-	}
-`
-
 export const getTicketsQuery = /* GraphQL */ `
-	query getParleyMarket($skipParlay: Int!, $firstParlay: Int!, $skipSingle: Int!, $firstSingle: Int!) {
-		parlayMarkets(first: $firstParlay, skip: $skipParlay, orderBy: timestamp, orderDirection: desc) {
+	query getTickets($skipParlay: Int!, $firstParlay: Int!, $skipSingle: Int!, $firstSingle: Int!, $dateFrom: Int!, $dateTo: Int!, $ignoreAccount: String!) {
+		parlayMarkets(
+			first: $firstParlay
+			skip: $skipParlay
+			orderBy: timestamp
+			orderDirection: desc
+			where: { timestamp_gte: $dateTo, timestamp_lte: $dateFrom }
+		) {
 			id
 			claimed
 			sUSDPaid
@@ -56,11 +29,18 @@ export const getTicketsQuery = /* GraphQL */ `
 				}
 			}
 		}
-		positionBalances(first: $firstSingle, skip: $skipSingle) {
+		positionBalances(
+			first: $firstSingle
+			skip: $skipSingle
+			orderBy: timestamp
+			orderDirection: desc
+			where: { timestamp_gte: $dateTo, timestamp_lte: $dateFrom, account_not: $ignoreAccount }
+		) {
 			account
 			amount
 			id
 			sUSDPaid
+			timestamp
 			position {
 				side
 				id

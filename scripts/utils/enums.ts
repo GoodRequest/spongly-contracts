@@ -10,9 +10,7 @@ export enum ORDER_DIRECTION {
 }
 
 export enum THE_GRAPH_OPERATION_NAME {
-	GET_PARLAY_MARKET = 'getParleyMarket',
-	GET_PARLAY_MARKET_ASCENDING = 'getParleyMarketAscending',
-	GET_SPORT_MARKET = 'getSportMarket'
+	GET_TICKETS = 'getTickets'
 }
 
 export enum SUBGRAPH_API_PATH {
