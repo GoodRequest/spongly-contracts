@@ -8,14 +8,16 @@ import { greenBright, redBright } from 'console-log-colors'
 
 dotenv.config()
 
-import { OVERTIME_SUBGRAPH_BASE_URL } from '../utils/constants'
-import { MARKET_PROPERTY, NETWORK, ORDER_DIRECTION, SUBGRAPH_API_PATH, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
-import { getParlayMarketsAscending, getTicketsQuery } from '../utils/queries'
+import { IGNORE_ACCCOUNTS_BY_NETWORK, OVERTIME_SUBGRAPH_BASE_URL } from '../utils/constants'
+import { MARKET_PROPERTY, NETWORK, SUBGRAPH_API_PATH, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
+import { getTicketsQuery } from '../utils/queries'
 import { ParlayMarket, Position, PositionBalance } from '../../types/types'
 import { Network } from 'hardhat/types'
+import { subtractMonths } from '../utils/helpers'
 
+// constants
 const BATCH_SIZE = 1000
-const MAX_ITERATIONS = 6
+const MAX_ITERATIONS = 6 // NOTE: 6000 records is limit of TheGraph's subgraph GraphQL API
 
 const IPFS_TOKEN = Buffer.from(`${process.env.IPFS_USER}:${process.env.IPFS_PASS}`).toString('base64')
 
@@ -44,12 +46,15 @@ const getSubgraphApiPath = (network: Network) => {
 
 export const getPositions = (data: ParlayMarket | PositionBalance): Array<Position> => {
 	let positions = [] as Array<Position>
+
 	if (MARKET_PROPERTY.POSITIONS in data) {
 		positions = data.positions
 	}
+
 	if (MARKET_PROPERTY.POSITION in data) {
 		positions.push(data.position)
 	}
+
 	return positions
 }
 
@@ -57,6 +62,7 @@ const isWinningTicket = (market: ParlayMarket | PositionBalance) => {
 	if (MARKET_PROPERTY.WON in market) {
 		return market.won
 	}
+
 	return market.position.claimable
 }
 
@@ -65,26 +71,30 @@ export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionB
 		const positions = getPositions(ticket)
 		return positions.every((position) => position.market.isResolved)
 	})
+
 	const winningTickets = resolvedTickets.filter((ticket) => isWinningTicket(ticket))
 	if (!resolvedTickets.length) return +(0).toFixed(2)
+
 	return +((winningTickets.length / resolvedTickets.length) * 100).toFixed(2)
 }
 
-const fetchAllTickets = async () => {
+const fetchAllTickets = async (fromDate: Date) => {
 	const tickets: any[] = []
 
 	const ticketQueryProps = {
 		firstParlay: BATCH_SIZE,
-		firstSingle: BATCH_SIZE
+		firstSingle: BATCH_SIZE,
+		dateFrom: Math.floor(fromDate.getTime() / 1000),
+		dateTo: Math.floor(subtractMonths(fromDate, 1).getTime() / 1000),
+		ignoreAccount: IGNORE_ACCCOUNTS_BY_NETWORK[network.name] || null
 	}
 
-	// NOTE: 6000 records is limit of TheGraph's GraphQL API
 	for (let i = 0; i < MAX_ITERATIONS; i++) {
 		const skip = i * BATCH_SIZE
 
 		// getting the latest parlay and singles data
 		const graphqlQuery = {
-			operationName: THE_GRAPH_OPERATION_NAME.GET_PARLAY_MARKET,
+			operationName: THE_GRAPH_OPERATION_NAME.GET_TICKETS,
 			variables: {
 				...ticketQueryProps,
 				skipParlay: skip,
@@ -93,31 +103,13 @@ const fetchAllTickets = async () => {
 			query: getTicketsQuery
 		}
 
-		// getting the oldest parlay data
-		const graphqlParlayMarketAscendingQuery = {
-			operationName: THE_GRAPH_OPERATION_NAME.GET_PARLAY_MARKET_ASCENDING,
-			variables: {
-				firstParlay: BATCH_SIZE,
-				skipParlay: skip,
-				orderDirection: ORDER_DIRECTION.ASC
-			},
-			query: getParlayMarketsAscending
-		}
-
-		const [mixedBatch, parlayMarketsAscendingBatch] = await Promise.all([
-			await theGraphClient.post(getSubgraphApiPath(network), graphqlQuery),
-			await theGraphClient.post(getSubgraphApiPath(network), graphqlParlayMarketAscendingQuery)
-		])
+		const mixedBatch = await theGraphClient.post(getSubgraphApiPath(network), graphqlQuery)
 
 		if (mixedBatch.data.errors && mixedBatch.data.errors.length) {
-			throw new Error(mixedBatch.data.errors.join('; '))
+			throw new Error('BATCH_FETCHING ' + mixedBatch.data.errors.join('; '))
 		}
 
-		if (parlayMarketsAscendingBatch.data.errors && parlayMarketsAscendingBatch.data.errors.length) {
-			throw new Error(parlayMarketsAscendingBatch.data.errors.join('; '))
-		}
-
-		const manchesterUnited = [...mixedBatch.data.data.parlayMarkets, ...mixedBatch.data.data.positionBalances, ...parlayMarketsAscendingBatch.data.data.parlayMarkets]
+		const manchesterUnited = [...mixedBatch.data.data.parlayMarkets, ...mixedBatch.data.data.positionBalances]
 
 		tickets.push(manchesterUnited)
 	}
@@ -125,18 +117,19 @@ const fetchAllTickets = async () => {
 	return tickets.flat()
 }
 
-const writeStatsToFile = async (stats: Record<string, any>, processStart: string) => {
-	const fileName = `stats-${network.name}-${processStart}.json`
+const writeStatsToFile = async (stats: Record<string, any>, fromDate: Date) => {
+	const fileName = `stats-${network.name}-${fromDate.toISOString()}.json`
 	const destinationFilePath = path.join(process.cwd(), 'scripts', 'generateStats', 'data', fileName)
 
 	await fs.writeFile(destinationFilePath, JSON.stringify(stats))
 }
 
-const formatStats = (tickets: any[], processStart: string) => {
+const formatStats = (tickets: any[], processStart: Date) => {
 	const uniqUsers = [...new Set(tickets.map((ticket) => ticket.account))]
 
 	const stats = uniqUsers.map((account) => {
 		const userTickets = tickets.filter((ticket) => ticket.account === account)
+
 		return {
 			ac: account,
 			sr: getSuccessRateForTickets(userTickets),
@@ -145,7 +138,7 @@ const formatStats = (tickets: any[], processStart: string) => {
 	})
 
 	return {
-		processStart,
+		processStart: processStart.toISOString(),
 		context: {
 			network: network.name,
 			ticketsCount: tickets.length,
@@ -173,9 +166,11 @@ const handleIpfsDeployment = async (stats: Record<string, any>) => {
 
 async function main() {
 	try {
-		const processStart = new Date().toISOString()
+		const processStart = new Date()
 
-		const tickets = await fetchAllTickets()
+		const tickets = await fetchAllTickets(processStart)
+
+		console.log(`Fetched ${tickets.length} tickets`)
 
 		const stats = formatStats(tickets, processStart)
 
