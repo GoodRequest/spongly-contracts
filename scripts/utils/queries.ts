@@ -13,6 +13,13 @@ export const getTicketsQuery = /* GraphQL */ `
 			timestamp
 			won
 			account
+			totalAmount
+			sportMarketsFromContract
+			marketQuotes
+			sportMarkets(first: 10, skip: 0) {
+				isCanceled
+				isResolved
+			},
 			positions(first: 10, skip: 0) {
 				claimable
 				id
@@ -26,6 +33,10 @@ export const getTicketsQuery = /* GraphQL */ `
 					isOpen
 					isPaused
 					isResolved
+					maturityDate
+					homeOdds
+					awayOdds
+					drawOdds
 				}
 			}
 		}
@@ -58,6 +69,9 @@ export const getTicketsQuery = /* GraphQL */ `
 					timestamp
 					resultDetails
 					maturityDate
+					homeOdds
+					awayOdds
+					drawOdds
 				}
 			}
 		}

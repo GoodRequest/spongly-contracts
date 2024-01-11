@@ -1,5 +1,8 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { Network } from 'hardhat/types'
 import path from 'path'
+
+import { NETWORK, SUBGRAPH_API_URL } from './enums'
 
 export const DEPLOYMENTS_PATH = path.resolve(process.cwd(), 'scripts', 'utils', 'deployments.json')
 
@@ -37,4 +40,23 @@ export const subtractMonths = (date: Date, months: number): Date => {
 	date.setMonth(date.getMonth() - months)
 
 	return date
+}
+
+export const getSubgraphApiPath = (network: { name: string }) => {
+	switch (network.name) {
+		case NETWORK.OPTIMISM_ETHEREUM:
+			return SUBGRAPH_API_URL.OPTIMISTIC_MAINNET
+
+		case NETWORK.OPTIMISM_GOERLI:
+			return SUBGRAPH_API_URL.OPTIMISTIC_GOERLI
+
+		case NETWORK.ARBITRUM_ONE:
+			return SUBGRAPH_API_URL.ARBITRUM_ONE
+
+		case NETWORK.BASE_MAINNET:
+			return SUBGRAPH_API_URL.BASE_MAINNET
+
+		default:
+			throw new Error(`Unsupported network ${network.name}`)
+	}
 }

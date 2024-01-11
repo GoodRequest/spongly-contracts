@@ -1,47 +1,90 @@
 import axios from 'axios'
 import fs from 'fs/promises'
 import path from 'path'
-import { network } from 'hardhat'
-import { create } from 'ipfs-http-client'
+import { create, globSource } from 'ipfs-http-client'
+import { greenBright } from 'console-log-colors'
 import dotenv from 'dotenv'
-import { greenBright, redBright } from 'console-log-colors'
 
 dotenv.config()
 
-import { IGNORE_ACCCOUNTS_BY_NETWORK, OVERTIME_SUBGRAPH_BASE_URL } from '../utils/constants'
-import { MARKET_PROPERTY, NETWORK, SUBGRAPH_API_PATH, THE_GRAPH_OPERATION_NAME } from '../utils/enums'
+import { MAX_BATCH_SIZE, IGNORE_ACCCOUNTS_BY_NETWORK, MAX_ITERATIONS_COUNT, OPTIMISM_DIVISOR } from '../utils/constants'
+import { MARKET_PROPERTY, THE_GRAPH_OPERATION_NAME, USER_TICKET_TYPE } from '../utils/enums'
 import { getTicketsQuery } from '../utils/queries'
-import { ParlayMarket, Position, PositionBalance } from '../../types/types'
-import { Network } from 'hardhat/types'
-import { subtractMonths } from '../utils/helpers'
-
-// constants
-const BATCH_SIZE = 1000
-const MAX_ITERATIONS = 6 // NOTE: 6000 records is limit of TheGraph's subgraph GraphQL API
+import { ParlayMarket, Position, PositionBalance, PositionType, UserPosition, UserTicket } from '../../types/types'
+import { getSubgraphApiPath, subtractMonths } from '../utils/helpers'
+import dayjs from 'dayjs'
 
 const IPFS_TOKEN = Buffer.from(`${process.env.IPFS_USER}:${process.env.IPFS_PASS}`).toString('base64')
 
 const ipfsClient = create({ url: process.env.IPFS_URL, headers: { authorization: `BASIC ${IPFS_TOKEN}` } })
 
-const theGraphClient = axios.create({
-	baseURL: OVERTIME_SUBGRAPH_BASE_URL,
-	headers: {
-		Accept: 'application/json',
-		'Content-Type': 'application/json'
+const round = (num: number, precision: number) => {
+  const modifier = 10 ** precision
+  return Math.round(num * modifier) / modifier
+}
+
+const floor = (num: number, precision: number) => {
+  const modifier = 10 ** precision
+  return Math.floor(num * modifier) / modifier
+}
+
+export const getUserTicketType = (ticket: UserTicket) => {
+	const userTickets = ticket.positions ? ticket.positions : [ticket.position as UserPosition]
+
+	const canceled = userTickets.filter((item) => item.market.isCanceled)
+
+	if (canceled.length >= 1) {
+		return USER_TICKET_TYPE.CANCELED
 	}
-})
 
-const getSubgraphApiPath = (network: Network) => {
-	switch (network.name) {
-		case NETWORK.OPTIMISM_MAINNET:
-			return SUBGRAPH_API_PATH.OPTIMISM_MAINNET
+	const finished = userTickets.filter((item) => item.market.isResolved)
+	if (finished.length === userTickets.length) {
+		if (ticket?.won) {
+			return USER_TICKET_TYPE.SUCCESS
+		}
 
-		case NETWORK.OPTIMISM_GOERLI:
-			return SUBGRAPH_API_PATH.OPTIMISM_GOERLI
+		if (ticket?.won === false) {
+			const won = userTickets.filter((item) => item.claimable)
 
-		default:
-			return SUBGRAPH_API_PATH.OPTIMISM_MAINNET
+			if (won.length === userTickets.length) {
+				return USER_TICKET_TYPE.SUCCESS
+			}
+
+			return USER_TICKET_TYPE.MISS
+		}
+
+		if (userTickets[0].claimable) {
+			return USER_TICKET_TYPE.SUCCESS
+		}
+		
+		return USER_TICKET_TYPE.MISS
 	}
+
+	if (finished.length > 0) {
+		const lossMatch = finished.filter((item) => !item.claimable)
+		if (lossMatch.length !== 0) return USER_TICKET_TYPE.MISS
+	}
+
+	const paused = userTickets.filter((item) => item.market.isPaused)
+
+	if (paused.length === userTickets.length) {
+		return USER_TICKET_TYPE.PAUSED
+	}
+
+	const ongoing = userTickets.find((item) => !item.market.isResolved && !item.market.isCanceled && !item.market.isOpen)
+
+	const now = dayjs()
+	const playingNow = userTickets.filter((item) => {
+		const maturityDate = dayjs(Number(item.market.maturityDate) * 1000)
+		if (maturityDate.isAfter(now)) return false
+		return true
+	})
+
+	if (ongoing || playingNow.length !== 0) {
+		return USER_TICKET_TYPE.ONGOING
+	}
+
+	return USER_TICKET_TYPE.OPEN
 }
 
 export const getPositions = (data: ParlayMarket | PositionBalance): Array<Position> => {
@@ -66,6 +109,65 @@ const isWinningTicket = (market: ParlayMarket | PositionBalance) => {
 	return market.position.claimable
 }
 
+export const getCanceledClaimAmount = (ticket: UserTicket) => {
+	// parlay
+	if (ticket?.positions) {
+		let totalAmount = +(ticket.totalAmount || 0) / OPTIMISM_DIVISOR
+
+		ticket.sportMarketsFromContract?.forEach((address, index) => {
+			const market = ticket.sportMarkets?.find((market) => market.address === address)
+			if (market && market.isCanceled && ticket?.marketQuotes?.[index]) {
+				totalAmount *= Number(ticket.marketQuotes[index]) / OPTIMISM_DIVISOR
+			}
+		})
+
+		return floor(totalAmount, 2).toFixed(2)
+	}
+
+	// single ticket
+	let claimAmount = 0
+	const match = ticket.position as UserPosition
+	if (match.isResolved && match.isCanceled) {
+		const match = ticket.position as UserPosition
+		switch (match.side) {
+			case PositionType.Away: {
+				claimAmount += (Number(match.market.homeOdds) / OPTIMISM_DIVISOR) * ((ticket.amount || 0) / OPTIMISM_DIVISOR)
+				break
+			}
+			case PositionType.Draw: {
+				claimAmount += match.market.drawOdds ? (Number(match.market.drawOdds) / OPTIMISM_DIVISOR) * ((ticket.amount || 0) / OPTIMISM_DIVISOR) : 0
+				break
+			}
+
+			case PositionType.Home: {
+				claimAmount += (Number(match.market.homeOdds) / OPTIMISM_DIVISOR) * ((ticket.amount || 0) / OPTIMISM_DIVISOR)
+				break
+			}
+			default:
+				claimAmount += 0
+		}
+	}
+	return floor(claimAmount, 2).toFixed(2)
+}
+
+export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], cancelledTickets: UserTicket[]) => {
+	let profit = 0
+
+	wonTickets?.forEach((ticket) => {
+		profit += (ticket.amount || ticket.totalAmount || 0) - ticket.sUSDPaid
+	})
+
+	lostTickets?.forEach((ticket) => {
+		profit -= ticket.sUSDPaid
+	})
+
+	cancelledTickets?.forEach((ticket) => {
+		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid
+	})
+
+	return round(profit / OPTIMISM_DIVISOR, 2).toFixed(2)
+}
+
 export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionBalance>): number => {
 	const resolvedTickets = tickets.filter((ticket) => {
 		const positions = getPositions(ticket)
@@ -78,21 +180,28 @@ export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionB
 	return +((winningTickets.length / resolvedTickets.length) * 100).toFixed(2)
 }
 
-const fetchAllTickets = async (fromDate: Date) => {
+const fetchAllTickets = async (fromDate: Date, network: { name: string }) => {
 	const tickets: any[] = []
 
+	const theGraphClient = axios.create({
+		baseURL: getSubgraphApiPath(network),
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json'
+		}
+	})
+
 	const ticketQueryProps = {
-		firstParlay: BATCH_SIZE,
-		firstSingle: BATCH_SIZE,
-		dateFrom: Math.floor(fromDate.getTime() / 1000),
-		dateTo: Math.floor(subtractMonths(fromDate, 1).getTime() / 1000),
+		firstParlay: MAX_BATCH_SIZE,
+		firstSingle: MAX_BATCH_SIZE,
+		dateFrom: dayjs(fromDate).unix(),
+		dateTo: dayjs(fromDate).subtract(1, 'month').unix(),
 		ignoreAccount: IGNORE_ACCCOUNTS_BY_NETWORK[network.name] || null
 	}
 
-	for (let i = 0; i < MAX_ITERATIONS; i++) {
-		const skip = i * BATCH_SIZE
+	for (let i = 0; i < MAX_ITERATIONS_COUNT; i++) {
+		const skip = i * MAX_BATCH_SIZE
 
-		// getting the latest parlay and singles data
 		const graphqlQuery = {
 			operationName: THE_GRAPH_OPERATION_NAME.GET_TICKETS,
 			variables: {
@@ -103,10 +212,12 @@ const fetchAllTickets = async (fromDate: Date) => {
 			query: getTicketsQuery
 		}
 
-		const mixedBatch = await theGraphClient.post(getSubgraphApiPath(network), graphqlQuery)
+		// NOTE: empty string is because graphql endpoint is already set in axios instance
+		const mixedBatch = await theGraphClient.post('', graphqlQuery)
 
 		if (mixedBatch.data.errors && mixedBatch.data.errors.length) {
-			throw new Error('BATCH_FETCHING ' + mixedBatch.data.errors.join('; '))
+			console.error({ errors: mixedBatch.data.errors })
+			throw new Error('BATCH_FETCHING')
 		}
 
 		const manchesterUnited = [...mixedBatch.data.data.parlayMarkets, ...mixedBatch.data.data.positionBalances]
@@ -117,42 +228,65 @@ const fetchAllTickets = async (fromDate: Date) => {
 	return tickets.flat()
 }
 
-const writeStatsToFile = async (stats: Record<string, any>, fromDate: Date) => {
-	const fileName = `stats-${network.name}-${fromDate.toISOString()}.json`
-	const destinationFilePath = path.join(process.cwd(), 'scripts', 'generateStats', 'data', fileName)
+const writeStatsToFile = async (stats: Record<string, any>, destinationFolderName: string, network: { name: string }) => {
+	const fileName = `${network.name}.json`
+	const destinationFilePath = path.join(process.cwd(), 'scripts', 'generateStats', 'data', destinationFolderName, fileName)
 
+	await fs.mkdir(path.dirname(destinationFilePath), { recursive: true })
 	await fs.writeFile(destinationFilePath, JSON.stringify(stats))
 }
 
-const formatStats = (tickets: any[], processStart: Date) => {
+const formatStats = (tickets: any[], processStart: Date, network: { name: string }) => {
 	const uniqUsers = [...new Set(tickets.map((ticket) => ticket.account))]
 
 	const stats = uniqUsers.map((account) => {
 		const userTickets = tickets.filter((ticket) => ticket.account === account)
+		
+		// filter user tickets by state (won, loss, cancel)
+		const wonTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.SUCCESS)
+ 		const lostTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.MISS)
+ 		const cancelledTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.CANCELED)
+
+		const pnl = +getProfit(wonTickets, lostTickets, cancelledTickets)
 
 		return {
 			ac: account,
 			sr: getSuccessRateForTickets(userTickets),
+			pnl,
 			tt: userTickets.length
 		}
-	})
+	}).sort((a, b) => b.sr - a.sr)
 
 	return {
-		processStart: processStart.toISOString(),
+		processStart: dayjs(processStart).toISOString(),
 		context: {
 			network: network.name,
 			ticketsCount: tickets.length,
-			uniqueUsersCount: uniqUsers.length
+			uniqueUsersCount: uniqUsers.length,
+			period: {
+				dateFrom: dayjs(processStart).subtract(1, 'month').toISOString(),
+				dateTo: dayjs(processStart).toISOString()
+			}
 		},
 		stats
 	}
 }
 
-const handleIpfsDeployment = async (stats: Record<string, any>) => {
-	const { cid } = await ipfsClient.add(JSON.stringify(stats))
+const handleDeployment = async (destinationFolderName: string) => {
+	let getRootCID = async () => {
+		let lastCid
+		for await (const file of ipfsClient.addAll(globSource(`./scripts/generateStats/data/${destinationFolderName}`, '**/*'), { wrapWithDirectory: true })) {
+			lastCid = file.cid
+		}
+		return lastCid
+	}
+
+	const rootCid = await getRootCID()
+
+	if (!rootCid) throw new Error('NO_ROOT_DIR_CID')
 
 	const response = await axios.post(
-		`${process.env.IPFS_URL}/name/publish?key=${process.env.IPNS_KEY}&arg=${cid}`,
+		`${process.env.IPFS_URL}/name/publish?key=${process.env.IPNS_KEY}&arg=${rootCid}`,
 		{},
 		{
 			headers: {
@@ -164,26 +298,38 @@ const handleIpfsDeployment = async (stats: Record<string, any>) => {
 	console.log(response.data)
 }
 
+const handleCleanup = async (destinationFolderName: string) => {
+	const destinationFilePath = path.join(process.cwd(), 'scripts', 'generateStats', 'data', destinationFolderName)
+
+	await fs.rm(destinationFilePath, { recursive: true, force: true })
+}
+
 async function main() {
 	try {
-		const processStart = new Date()
+		const processStart = dayjs().toDate()
 
-		const tickets = await fetchAllTickets(processStart)
+		const networks = [{ name: 'optimisticEthereum' }, { name: 'arbitrumOne' }, { name: 'baseMainnet' }]
 
-		console.log(`Fetched ${tickets.length} tickets`)
+		const destinationFolderName = `stats-${processStart.toISOString()}`
 
-		const stats = formatStats(tickets, processStart)
+		for (const network of networks) {
+			const tickets = await fetchAllTickets(processStart, network)
 
-		await handleIpfsDeployment(stats)
+			const stats = formatStats(tickets, processStart, network)
 
-		if (process.env.GENERATE_FILE) {
-			await writeStatsToFile(stats, processStart)
+			await writeStatsToFile(stats, destinationFolderName, network)
+		}
+
+		await handleDeployment(destinationFolderName)
+
+		if (!process.env.DEBUG) {
+			await handleCleanup(destinationFolderName)
 		}
 
 		console.log(greenBright('Stats generated successfully!'))
 		process.exit(0)
 	} catch (error) {
-		console.error(redBright(error))
+		console.error(error)
 		process.exit(1)
 	}
 }

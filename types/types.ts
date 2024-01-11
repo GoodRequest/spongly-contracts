@@ -91,3 +91,58 @@ export type PositionBalance = {
 	position: Position
 	sUSDPaid: Scalars['String']
 }
+
+export enum WALLET_TICKETS {
+	ALL = 'ALL',
+	SUCCESSFUL = 'SUCCESSFUL',
+	MISSED = 'MISSED',
+	ONGOING = 'ONGOING',
+	OPEN_TICKETS = 'OPENTICKETS',
+	PAUSED_CANCELED = 'PAUSEDCANCELED'
+}
+
+export type UserPosition = {
+	id: number | string
+	side: string
+	claimable: boolean
+	awayOdds: number | string
+	awayTeam: string
+	finalResult: null | string
+	homeOdds: number | string
+	homeTeam: string
+	isCanceled: boolean
+	isOpen: boolean
+	isPaused: boolean
+	isResolved: boolean
+	marketAddress: string
+	maturityDate: number
+	tags?: [] | undefined
+	market: SportMarket
+}
+
+export type UserTicket = {
+	id: number | string
+	won: boolean | undefined
+	claimed: boolean | undefined
+	sUSDPaid: number
+	txHash: string
+	quote: string | undefined | null
+	amount?: number
+	totalAmount?: number
+	maturityDate: number
+	marketQuotes?: string[]
+	sportMarketsFromContract?: string[]
+	ticketType: WALLET_TICKETS
+	isClaimable: boolean
+	timestamp: string | number
+	account?: string
+	position?: UserPosition
+	positions: UserPosition[]
+	sportMarkets?: [
+		{
+			gameId: string
+			address: string
+			isCanceled: boolean
+		}
+	]
+}

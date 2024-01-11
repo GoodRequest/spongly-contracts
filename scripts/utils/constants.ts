@@ -1,9 +1,19 @@
+import { NETWORK } from './enums'
+
 export const GNOSIS_SAFE_WALLET_ADDRESS = '0x0ec9d8dac2178b041f85f60e3cf13cfaa3d23e0e'
+
+export const OPTIMISM_DIVISOR = 1000000000000000000
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const OVERTIME_SUBGRAPH_BASE_URL = 'https://api.thegraph.com/subgraphs/name/thales-markets'
+// NOTE: 6000 records is limit of TheGraph's subgraph GraphQL API
+// meaning 6 iterations over 1000 records each
+export const MAX_BATCH_SIZE = 1000
+export const MAX_ITERATIONS_COUNT = 6
 
 export const IGNORE_ACCCOUNTS_BY_NETWORK: Record<string, string> = {
-	optimisticEthereum: '0x82B3634C0518507D5d817bE6dAb6233ebE4D68D9'
+	[NETWORK.OPTIMISM_ETHEREUM]: '0x82B3634C0518507D5d817bE6dAb6233ebE4D68D9',
+	[NETWORK.OPTIMISM_GOERLI]: '0x0ec9D8Dac2178b041f85f60E3cF13CfaA3d23e0e',
+	[NETWORK.ARBITRUM_ONE]: '0x2Bb7D689780e7a34dD365359bD7333ab24903268',
+	[NETWORK.BASE_MAINNET]: '0x5625c3233b52206a5f23c5fC1Ce16F6A7e3874dd'
 }

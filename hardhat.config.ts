@@ -1,10 +1,10 @@
 import { HardhatUserConfig } from 'hardhat/config'
-/* import '@nomiclabs/hardhat-etherscan'
+import '@nomiclabs/hardhat-etherscan'
 import '@nomiclabs/hardhat-ethers'
 import '@nomicfoundation/hardhat-toolbox'
 import '@nomiclabs/hardhat-solhint'
 import '@openzeppelin/hardhat-upgrades'
-import 'hardhat-abi-exporter' */
+import 'hardhat-abi-exporter'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -15,6 +15,8 @@ const INFURA_API_KEY = process.env.INFURA_API_KEY!
 const ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY!
 const OP_ETHERSCAN_KEY = process.env.ETHERSCAN_API_KEY!
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY!
+const ARBITRUM_API_KEY = process.env.ARBITRUM_API_KEY!
+const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY!
 
 const config: HardhatUserConfig = {
 	solidity: {
@@ -85,6 +87,12 @@ const config: HardhatUserConfig = {
 			chainId: 42161,
 			//gasPrice: 5000000000,
 			accounts: [PRIVATE_KEY]
+		},
+		baseMainnet: {
+			url: 'https://mainnet.base.org',
+			chainId: 8453,
+			accounts: [PRIVATE_KEY],
+			gasPrice: 1000000000
 		}
 	},
 	gasReporter: {
@@ -108,6 +116,14 @@ const config: HardhatUserConfig = {
 					apiURL: 'https://api-goerli-optimism.etherscan.io/api',
 					browserURL: 'https://goerli-optimism.etherscan.io/'
 				}
+			},
+			{
+				network: 'baseMainnet',
+				chainId: 8453,
+				urls: {
+					apiURL: 'https://api.basescan.org/api',
+					browserURL: 'https://basescan.org/'
+				}
 			}
 		],
 		apiKey: {
@@ -123,10 +139,10 @@ const config: HardhatUserConfig = {
 
 			// polygon
 			polygon: POLYGONSCAN_API_KEY,
-			polygonMumbai: POLYGONSCAN_API_KEY
+			polygonMumbai: POLYGONSCAN_API_KEY,
 
-			// bsc: BSC_API_KEY,
-			// arbitrumOne: ARBITRUM_API_KEY
+			arbitrumOne: ARBITRUM_API_KEY,
+			baseMainnet: BASESCAN_API_KEY
 		}
 	}
 }
