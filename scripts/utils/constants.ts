@@ -2,14 +2,24 @@ import { NETWORK } from './enums'
 
 export const GNOSIS_SAFE_WALLET_ADDRESS = '0x0ec9d8dac2178b041f85f60e3cf13cfaa3d23e0e'
 
-export const OPTIMISM_DIVISOR = 1000000000000000000
-
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const OPTIMISM_DIVISOR = 1000000000000000000
+export const ARBITRUM_DIVISOR = 1000000
+export const BASE_DIVISOR = 1000000
 
 // NOTE: 6000 records is limit of TheGraph's subgraph GraphQL API
 // meaning 6 iterations over 1000 records each
 export const MAX_BATCH_SIZE = 1000
 export const MAX_ITERATIONS_COUNT = 6
+
+export const NETWORK_IDS = {
+	OPTIMISM: 10,
+	OPTIMISM_GOERLI: 420,
+	GOERLI: 5,
+	ARBITRUM: 42161,
+	BASE: 8453
+}
 
 export const IGNORE_ACCCOUNTS_BY_NETWORK: Record<string, string> = {
 	[NETWORK.OPTIMISM_ETHEREUM]: '0x82B3634C0518507D5d817bE6dAb6233ebE4D68D9',

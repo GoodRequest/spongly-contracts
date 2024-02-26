@@ -36,12 +36,6 @@ export const getDeploymentAddress = (contractName: string, network: string): str
 	return deployments[network][contractName]
 }
 
-export const subtractMonths = (date: Date, months: number): Date => {
-	date.setMonth(date.getMonth() - months)
-
-	return date
-}
-
 export const getSubgraphApiPath = (network: { name: string }) => {
 	switch (network.name) {
 		case NETWORK.OPTIMISM_ETHEREUM:
