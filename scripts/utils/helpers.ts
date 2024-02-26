@@ -1,5 +1,4 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs'
-import { Network } from 'hardhat/types'
 import path from 'path'
 
 import { NETWORK, SUBGRAPH_API_URL } from './enums'

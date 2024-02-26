@@ -32,8 +32,6 @@ export const getDividerByNetworkId = (networkId: number) => {
 	switch (networkId) {
 		case NETWORK_IDS.OPTIMISM:
 			return OPTIMISM_DIVISOR
-		case NETWORK_IDS.OPTIMISM_GOERLI:
-			return OPTIMISM_DIVISOR
 		case NETWORK_IDS.ARBITRUM:
 			return ARBITRUM_DIVISOR
 		case NETWORK_IDS.BASE:
