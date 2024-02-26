@@ -14,6 +14,11 @@ export enum PositionType {
 	Home = 'home'
 }
 
+export type ProcessNetwork = {
+	id: number
+	name: string
+}
+
 export type SportMarket = {
 	__typename?: 'SportMarket'
 	address: Scalars['String']

@@ -7,11 +7,11 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-import { MAX_BATCH_SIZE, IGNORE_ACCCOUNTS_BY_NETWORK, MAX_ITERATIONS_COUNT, OPTIMISM_DIVISOR } from '../utils/constants'
+import { MAX_BATCH_SIZE, IGNORE_ACCCOUNTS_BY_NETWORK, MAX_ITERATIONS_COUNT, OPTIMISM_DIVISOR, NETWORK_IDS, ARBITRUM_DIVISOR, BASE_DIVISOR } from '../utils/constants'
 import { MARKET_PROPERTY, THE_GRAPH_OPERATION_NAME, USER_TICKET_TYPE } from '../utils/enums'
 import { getTicketsQuery } from '../utils/queries'
-import { ParlayMarket, Position, PositionBalance, PositionType, UserPosition, UserTicket } from '../../types/types'
-import { getSubgraphApiPath, subtractMonths } from '../utils/helpers'
+import { ParlayMarket, Position, PositionBalance, PositionType, ProcessNetwork, UserPosition, UserTicket } from '../../types/types'
+import { getSubgraphApiPath } from '../utils/helpers'
 import dayjs from 'dayjs'
 
 const IPFS_TOKEN = Buffer.from(`${process.env.IPFS_USER}:${process.env.IPFS_PASS}`).toString('base64')
@@ -26,6 +26,21 @@ const round = (num: number, precision: number) => {
 const floor = (num: number, precision: number) => {
   const modifier = 10 ** precision
   return Math.floor(num * modifier) / modifier
+}
+
+export const getDividerByNetworkId = (networkId: number) => {
+	switch (networkId) {
+		case NETWORK_IDS.OPTIMISM:
+			return OPTIMISM_DIVISOR
+		case NETWORK_IDS.ARBITRUM:
+			return ARBITRUM_DIVISOR
+		case NETWORK_IDS.BASE:
+			return BASE_DIVISOR
+		default:
+			// eslint-disable-next-line no-console
+			console.error('Error occured durring getDividerByNetworkId()')
+			return 0
+	}
 }
 
 export const getUserTicketType = (ticket: UserTicket) => {
@@ -87,8 +102,8 @@ export const getUserTicketType = (ticket: UserTicket) => {
 	return USER_TICKET_TYPE.OPEN
 }
 
-export const getPositions = (data: ParlayMarket | PositionBalance): Array<Position> => {
-	let positions = [] as Array<Position>
+export const getPositions = (data: ParlayMarket | PositionBalance): Position[] => {
+	let positions = [] as Position[]
 
 	if (MARKET_PROPERTY.POSITIONS in data) {
 		positions = data.positions
@@ -150,22 +165,24 @@ export const getCanceledClaimAmount = (ticket: UserTicket) => {
 	return floor(claimAmount, 2).toFixed(2)
 }
 
-export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], cancelledTickets: UserTicket[]) => {
+export const getProfit = (wonTickets: UserTicket[], lostTickets: UserTicket[], cancelledTickets: UserTicket[], networkID?: number) => {
+	if (!networkID) return 0
+
 	let profit = 0
 
 	wonTickets?.forEach((ticket) => {
-		profit += (ticket.amount || ticket.totalAmount || 0) - ticket.sUSDPaid
+		profit += (ticket.amount || ticket.totalAmount || 0) / OPTIMISM_DIVISOR - ticket.sUSDPaid / getDividerByNetworkId(networkID)
 	})
 
 	lostTickets?.forEach((ticket) => {
-		profit -= ticket.sUSDPaid
+		profit -= ticket.sUSDPaid / getDividerByNetworkId(networkID)
 	})
 
 	cancelledTickets?.forEach((ticket) => {
-		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid
+		profit += Number(getCanceledClaimAmount(ticket)) - ticket.sUSDPaid / getDividerByNetworkId(networkID)
 	})
 
-	return round(profit / OPTIMISM_DIVISOR, 2).toFixed(2)
+	return round(profit, 2).toFixed(2)
 }
 
 export const getSuccessRateForTickets = (tickets: Array<ParlayMarket | PositionBalance>): number => {
@@ -228,7 +245,7 @@ const fetchAllTickets = async (fromDate: Date, network: { name: string }) => {
 	return tickets.flat()
 }
 
-const writeStatsToFile = async (stats: Record<string, any>, destinationFolderName: string, network: { name: string }) => {
+const writeStatsToFile = async (stats: Record<string, any>, destinationFolderName: string, network: ProcessNetwork) => {
 	const fileName = `${network.name}.json`
 	const destinationFilePath = path.join(process.cwd(), 'scripts', 'generateStats', 'data', destinationFolderName, fileName)
 
@@ -236,7 +253,7 @@ const writeStatsToFile = async (stats: Record<string, any>, destinationFolderNam
 	await fs.writeFile(destinationFilePath, JSON.stringify(stats))
 }
 
-const formatStats = (tickets: any[], processStart: Date, network: { name: string }) => {
+const formatStats = (tickets: any[], processStart: Date, network: ProcessNetwork) => {
 	const uniqUsers = [...new Set(tickets.map((ticket) => ticket.account))]
 
 	const stats = uniqUsers.map((account) => {
@@ -247,7 +264,7 @@ const formatStats = (tickets: any[], processStart: Date, network: { name: string
  		const lostTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.MISS)
  		const cancelledTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.CANCELED)
 
-		const pnl = +getProfit(wonTickets, lostTickets, cancelledTickets)
+		const pnl = +getProfit(wonTickets, lostTickets, cancelledTickets, network.id)
 
 		return {
 			ac: account,
@@ -308,7 +325,11 @@ async function main() {
 	try {
 		const processStart = dayjs().toDate()
 
-		const networks = [{ name: 'optimisticEthereum' }, { name: 'arbitrumOne' }, { name: 'baseMainnet' }]
+		const networks: ProcessNetwork[] = [
+			{ id: 10, name: 'optimisticEthereum' },
+			{ id: 42161, name: 'arbitrumOne' },
+			{ id: 8453, name: 'baseMainnet' }
+		]
 
 		const destinationFolderName = `stats-${processStart.toISOString()}`
 
