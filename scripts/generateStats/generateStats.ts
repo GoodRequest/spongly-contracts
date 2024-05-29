@@ -7,7 +7,15 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-import { MAX_BATCH_SIZE, IGNORE_ACCCOUNTS_BY_NETWORK, MAX_ITERATIONS_COUNT, OPTIMISM_DIVISOR, NETWORK_IDS, ARBITRUM_DIVISOR, BASE_DIVISOR } from '../utils/constants'
+import {
+	MAX_BATCH_SIZE,
+	IGNORE_ACCCOUNTS_BY_NETWORK,
+	MAX_ITERATIONS_COUNT,
+	OPTIMISM_DIVISOR,
+	NETWORK_IDS,
+	ARBITRUM_DIVISOR,
+	BASE_DIVISOR
+} from '../utils/constants'
 import { MARKET_PROPERTY, THE_GRAPH_OPERATION_NAME, USER_TICKET_TYPE } from '../utils/enums'
 import { getTicketsQuery } from '../utils/queries'
 import { ParlayMarket, Position, PositionBalance, PositionType, ProcessNetwork, UserPosition, UserTicket } from '../../types/types'
@@ -19,13 +27,13 @@ const IPFS_TOKEN = Buffer.from(`${process.env.IPFS_USER}:${process.env.IPFS_PASS
 const ipfsClient = create({ url: process.env.IPFS_URL, headers: { authorization: `BASIC ${IPFS_TOKEN}` } })
 
 const round = (num: number, precision: number) => {
-  const modifier = 10 ** precision
-  return Math.round(num * modifier) / modifier
+	const modifier = 10 ** precision
+	return Math.round(num * modifier) / modifier
 }
 
 const floor = (num: number, precision: number) => {
-  const modifier = 10 ** precision
-  return Math.floor(num * modifier) / modifier
+	const modifier = 10 ** precision
+	return Math.floor(num * modifier) / modifier
 }
 
 export const getDividerByNetworkId = (networkId: number) => {
@@ -71,7 +79,7 @@ export const getUserTicketType = (ticket: UserTicket) => {
 		if (userTickets[0].claimable) {
 			return USER_TICKET_TYPE.SUCCESS
 		}
-		
+
 		return USER_TICKET_TYPE.MISS
 	}
 
@@ -256,23 +264,25 @@ const writeStatsToFile = async (stats: Record<string, any>, destinationFolderNam
 const formatStats = (tickets: any[], processStart: Date, network: ProcessNetwork) => {
 	const uniqUsers = [...new Set(tickets.map((ticket) => ticket.account))]
 
-	const stats = uniqUsers.map((account) => {
-		const userTickets = tickets.filter((ticket) => ticket.account === account)
-		
-		// filter user tickets by state (won, loss, cancel)
-		const wonTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.SUCCESS)
- 		const lostTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.MISS)
- 		const cancelledTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.CANCELED)
+	const stats = uniqUsers
+		.map((account) => {
+			const userTickets = tickets.filter((ticket) => ticket.account === account)
 
-		const pnl = +getProfit(wonTickets, lostTickets, cancelledTickets, network.id)
+			// filter user tickets by state (won, loss, cancel)
+			const wonTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.SUCCESS)
+			const lostTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.MISS)
+			const cancelledTickets = userTickets.filter((ticket) => getUserTicketType(ticket) === USER_TICKET_TYPE.CANCELED)
 
-		return {
-			ac: account,
-			sr: getSuccessRateForTickets(userTickets),
-			pnl,
-			tt: userTickets.length
-		}
-	}).sort((a, b) => b.sr - a.sr)
+			const pnl = +getProfit(wonTickets, lostTickets, cancelledTickets, network.id)
+
+			return {
+				ac: account,
+				sr: getSuccessRateForTickets(userTickets),
+				pnl,
+				tt: userTickets.length
+			}
+		})
+		.sort((a, b) => b.sr - a.sr)
 
 	return {
 		processStart: dayjs(processStart).toISOString(),
