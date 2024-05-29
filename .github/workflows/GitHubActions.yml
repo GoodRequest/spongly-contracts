@@ -43,4 +43,4 @@ jobs:
 
       - name: Generate and publish stats
         run: |
-          CI=false yarn run op:generate-stats
+          CI=false yarn run generate-stats
