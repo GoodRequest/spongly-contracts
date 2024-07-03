@@ -15,9 +15,9 @@ export enum THE_GRAPH_OPERATION_NAME {
 }
 
 export enum SUBGRAPH_API_URL {
-	OPTIMISTIC_MAINNET = 'https://api.thegraph.com/subgraphs/name/thales-markets/sport-markets-optimism',
+	OPTIMISTIC_MAINNET = 'https://gateway-arbitrum.network.thegraph.com/api/6fc8662629cadd28365324b1e12ea40e/deployments/id/QmXEs6E47dLKNpFpUTkY5MDfoDmLU2WiCn7n6HjmfWNsyx',
 	OPTIMISTIC_GOERLI = 'https://api.thegraph.com/subgraphs/name/thales-markets/sport-markets-optimism-goerli',
-	ARBITRUM_ONE = 'https://api.thegraph.com/subgraphs/name/thales-markets/overtime-arbitrum',
+	ARBITRUM_ONE = 'https://gateway-arbitrum.network.thegraph.com/api/6fc8662629cadd28365324b1e12ea40e/deployments/id/QmVTmfjNXA5ZM9uZy75eNgGHjX45tmgDfnSYjm5EQjLbJN',
 	BASE_MAINNET = 'https://api.studio.thegraph.com/query/11948/overtime-base/version/latest'
 }
 
